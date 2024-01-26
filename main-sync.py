@@ -1,3 +1,4 @@
+import pprint
 import praw
 
 CLIENT_ID = "gB_we0e6sW9IK_Xjrw1szQ"
@@ -22,7 +23,29 @@ reddit = create_instance()
 subreddit = reddit.subreddit("neovim")
 
 print(subreddit.display_name)
-print("===================================")
+print("+++++++++++++++++++++++++++++++++++")
 print(subreddit.title)
-print("===================================")
+print("+++++++++++++++++++++++++++++++++++")
 print(subreddit.description)
+
+# get redditor info
+my_reddit = reddit.redditor("bewchacca-lacca")
+
+print("+++++++++++++++++++++++++++++++++++")
+print(my_reddit.link_karma) # you have to print something to trigger a request and make the object non-lazy
+pprint.pprint(vars(my_reddit))
+
+# get a user subreddit
+user_subreddit = reddit.subreddit('u_bewchacca-lacca')
+
+print("+++++++++++++++++++++++++++++++++++")
+print(user_subreddit.title) # the title field is empty
+pprint.pprint(vars(user_subreddit))
+
+# get a redditor's comments and submissions?
+user_comments = reddit.redditor("bewchacca-lacca").comments.new(limit=None)
+user_comments_list = list(user_comments)
+
+print("+++++++++++++++++++++++++++++++++++")
+print(user_comments_list[10]) # returns comment ID
+print(len(user_comments_list))
