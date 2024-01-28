@@ -21,6 +21,10 @@ async def setup_access():
         username=USERNAME)
     return instance
 
+def get_random_subreddit():
+    subreddit = reddit.random_subreddit()
+    
+
 async def top_posts(subreddit, n_submissions, time_filter, reddit):
     """Get the top n submissions from the specified subreddit."""
     subreddit = await reddit.subreddit(subreddit)
@@ -42,9 +46,10 @@ async def main():
     # start reddit instance
     reddit = await setup_access()
     
+    
     # pull in posts
-    posts = await top_posts(subreddit='Republican', n_submissions=1,
-                            time_filter='month', reddit=reddit)
+    posts = await top_posts(subreddit=subreddit, n_submissions=30,
+                            time_filter='year', reddit=reddit)
     
     # for each post, get all comments and add them to a single list
     all_comments = [] 
