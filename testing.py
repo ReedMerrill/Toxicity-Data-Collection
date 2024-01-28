@@ -49,3 +49,21 @@ user_comments_list = list(user_comments)
 print("+++++++++++++++++++++++++++++++++++")
 print(user_comments_list[10]) # returns comment ID
 print(len(user_comments_list))
+
+print("+++++++++++++++++++++++++++++++++++")
+print("Subreddit Metadata")
+pprint.pprint(vars(subreddit))
+
+print("+++++++++++++++++++++++++++++++++++")
+print("Random Subreddits")
+random_subs = [reddit.random_subreddit() for _ in range(100)]
+print("")
+print("urls")
+for sub in random_subs:
+    print(sub.url)
+
+print("")
+subscriber_counts = [reddit.random_subreddit().subscribers for _ in range(100)]
+avg_subscribers = sum(subscriber_counts) / 100
+print(f'Average Subscribers: {avg_subscribers}')
+# why does this take forever to calculate xD
