@@ -1,5 +1,6 @@
 import asyncio
 import asyncpraw
+import json
 
 # credentials
 CLIENT_ID = "gB_we0e6sW9IK_Xjrw1szQ"
@@ -9,7 +10,8 @@ USER_AGENT = "Reed's politics scraper v1.0.0 (u/bewchacca-lacca)"
 USERNAME = "bewchacca-lacca"
 
 # search parameters
-SEED_SUBREDDITS = ['Republican', 'democrats']
+seeds_dict = json.load(open('seed-subreddits.json'))
+SEED_SUBREDDITS = seeds_dict['all']
 
 async def setup_access():
     """Create an instance for API access"""
@@ -21,12 +23,9 @@ async def setup_access():
         username=USERNAME)
     return instance
 
-def get_random_subreddit():
-    subreddit = reddit.random_subreddit()
-    
-
 async def top_posts(subreddit, n_submissions, time_filter, reddit):
-    """Get the top n submissions from the specified subreddit."""
+    """Get the top n submissions from the specified subreddit.
+    """
     subreddit = await reddit.subreddit(subreddit)
     submissions = []
     async for submission in subreddit.top(time_filter=time_filter, limit=n_submissions):
@@ -34,7 +33,8 @@ async def top_posts(subreddit, n_submissions, time_filter, reddit):
     return submissions
 
 async def get_post_comments(post, reddit):
-    """Get the comments on a single post. For use in a loop to hand multiple post."""
+    """Get the comments on a single post. To be used in a loop to handle multiple post.
+    """
     post = await reddit.submission(post)
     comments = []
     async for comment in post.comments():
@@ -46,19 +46,17 @@ async def main():
     # start reddit instance
     reddit = await setup_access()
     
-    
     # pull in posts
-    posts = await top_posts(subreddit=subreddit, n_submissions=30,
-                            time_filter='year', reddit=reddit)
+    all_posts = []
+    for sub in SEED_SUBREDDITS:
+        posts = await top_posts(subreddit=sub, n_submissions=30, time_filter='year', reddit=reddit)
+        all_posts.append(posts)
     
     # for each post, get all comments and add them to a single list
     all_comments = [] 
-    async for post in posts:
+    async for post in all_posts:
         post_comments = await get_post_comments(post=post, reddit=reddit)
         all_comments.append(post_comments)
-    
-    for post in posts:
-        print(f'Post ID: {post}')
     
     await reddit.close()
 
