@@ -5,8 +5,9 @@ import time
 import calls
 
 # single sub for testing
-PATH = '/home/reed/Projects/learned-toxicity-reddit/reddit-api/seed-subreddits.json'
-seeds_dict = json.load(open(PATH))
+INPUT_PATH = '/home/reed/Projects/learned-toxicity-reddit/reddit-api/seed-subreddits.json'
+OUTPUT_PATH = '/home/reed/Projects/learned-toxicity-reddit/reddit-api/output/'
+seeds_dict = json.load(open(INPUT_PATH))
 SEED_SUBREDDITS = seeds_dict['all']
 
 def main():
@@ -35,16 +36,16 @@ def main():
         seed_to_posts.update({seed: posts})
 
         # iterate through the posts returned from the seed, retreiving their comment IDs
-        for post in posts:
+        for i, post in enumerate(posts):
 
             comments = calls.get_post_comments_ids(reddit=reddit, submission_id=post)
 
             post_to_comments.update({post: comments})
 
             # iterate through the comments, retreiving each one's author
-            for i, comment in enumerate(comments):
+            for j, comment in enumerate(comments):
 
-                print(f'Fetching Author of comment {i}')
+                print(f'Fetching Author:\n\tPost: {i}\n\tComment: {j}\n\tSeed: {seed}')
 
                 user = calls.get_comment_author(reddit=reddit, comment_id=comment)
 
@@ -53,7 +54,7 @@ def main():
 
                 users['users'].append(user)
 
-                print(f'Finished: {seed}')
+        print(f'Finished: {seed}')
 
     output_dict = {
         'seed_to_posts': seed_to_posts,
@@ -62,11 +63,11 @@ def main():
     }
 
     # output sampling procedure
-    with open("sampling-prodecure.json", "w") as outfile:
+    with open(OUTPUT_PATH + "sampling-prodecure.json", "w") as outfile:
         json.dump(output_dict, outfile)
 
     # output users dict
-    with open("user-sample.json", "w") as outfile:
+    with open(OUTPUT_PATH + "user-sample.json", "w") as outfile:
         json.dump(users, outfile)
 
     finished = time.time()
