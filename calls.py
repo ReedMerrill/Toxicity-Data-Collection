@@ -48,8 +48,7 @@ def get_post_comments_ids(reddit, submission_id):
 def get_comment_author(reddit, comment_id):
     """Takes a comment ID and return that comment's author.
     """
-    
-    return reddit.comment(comment_id).author
+    return str(reddit.comment(comment_id).author)
 
 def get_comment_metadata(reddit, comment_id):
     """TODO: get all the comment metadata needed for the main analysis"""
