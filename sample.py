@@ -8,7 +8,8 @@ import calls
 INPUT_PATH = '/home/reed/Projects/learned-toxicity-reddit/reddit-api/seed-subreddits.json'
 OUTPUT_PATH = '/home/reed/Projects/learned-toxicity-reddit/reddit-api/output/'
 seeds_dict = json.load(open(INPUT_PATH))
-SEED_SUBREDDITS = seeds_dict['all']
+#SEED_SUBREDDITS = seeds_dict['all']
+SEED_SUBREDDITS = ['test']
 
 def main():
     """Iterate through the sampling structure, saving the elements used in sampling at each level.
@@ -19,7 +20,7 @@ def main():
     reddit = calls.setup_access()
 
     time_period = 'year'
-    n_submissions = 10
+    n_submissions = 1
 
     seed_to_posts = {}
     post_to_comments = {}
@@ -64,11 +65,11 @@ def main():
 
     # output sampling procedure
     with open(OUTPUT_PATH + "sampling-prodecure.json", "w") as outfile:
-        json.dump(output_dict, outfile)
+        json.dump(output_dict, outfile, indent=4)
 
     # output users dict
     with open(OUTPUT_PATH + "user-sample.json", "w") as outfile:
-        json.dump(users, outfile)
+        json.dump(users, outfile, indent=4)
 
     finished = time.time()
 
