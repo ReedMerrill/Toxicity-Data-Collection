@@ -7,19 +7,23 @@ import sys
 import calls
 
 # single sub for testing
-INPUT_PATH = '/home/reed/Projects/learned-toxicity-reddit/reddit-api/seed-subreddits.json'
-OUTPUT_PATH = '/home/reed/Projects/learned-toxicity-reddit/reddit-api/output/'
+PROJECT_PATH = '/home/reed/Projects/learned-toxicity-reddit/reddit-api/'
+INPUT_PATH = f'{PROJECT_PATH}seed-subreddits.json'
+OUTPUT_PATH = f'{PROJECT_PATH}output/'
+
+LOG_DESC = 'sample'
+LOG_FILE_PATH = f'{PROJECT_PATH}logs/{LOG_DESC}_{datetime.datetime.now()}.txt'
+
 SEEDS_DICT = json.load(open(INPUT_PATH))
-#SEED_SUBREDDITS = seeds_dict['all']
-SEED_SUBREDDITS = ['test']
-LOG_DESC = 'testing'
-LOG_FILE_PATH = [f'logs/{LOG_DESC}_{datetime.datetime()}.txt']
+SEED_SUBREDDITS = SEEDS_DICT['all']
+#SEED_SUBREDDITS = ['test']
 
 def main():
     """Iterate through the sampling structure, saving the elements used in sampling at each level.
     """
 
     start = time.time()
+    start_time = datetime.datetime.now()
 
     print("Initializing API Instance")
 
@@ -28,7 +32,7 @@ def main():
     print("Initialization complete.")
 
     time_period = 'year'
-    n_submissions = 1
+    n_submissions = 10
 
     seed_to_posts = {}
     post_to_comments = {}
@@ -54,9 +58,7 @@ def main():
             # iterate through the comments, retreiving each one's author
             for j, comment in enumerate(comments):
 
-                sys.stdout.flush()
-                sys.stdout.write(
-                    f'{datetime.datetime()} - Fetching:\n\tSeed: {seed}, Post: {i}, Comment: {j}')
+                print(f'{datetime.datetime.now()} - Fetching Seed: {seed}, Post: {i}, Comment: {j}')
 
                 user = calls.get_comment_author(reddit=reddit, comment_id=comment)
 
@@ -66,7 +68,7 @@ def main():
                 users['users'].append(user)
 
             with open(LOG_FILE_PATH, "a") as log_file:
-                log_file.write(f'{datetime.datetime} - Finished Post {i} of seed "{seed}"')
+                log_file.write(f'{start_time} - Finished Post {i} of seed "{seed}"\n')
 
     output_dict = {
         'seed_to_posts': seed_to_posts,
@@ -84,7 +86,7 @@ def main():
 
     finished = time.time()
 
-    job_time = finished - start / 60
+    job_time = (finished - start) / 60
 
     print(f'Job took {job_time} minutes')
 
