@@ -2,21 +2,33 @@
 """
 import json
 import time
+import datetime
+import sys
 import calls
 
 # single sub for testing
-INPUT_PATH = '/home/reed/Projects/learned-toxicity-reddit/reddit-api/seed-subreddits.json'
-OUTPUT_PATH = '/home/reed/Projects/learned-toxicity-reddit/reddit-api/data/'
-seeds_dict = json.load(open(INPUT_PATH))
-SEED_SUBREDDITS = seeds_dict['all']
+PROJECT_PATH = '/home/reed/Projects/learned-toxicity-reddit/reddit-api/'
+INPUT_PATH = f'{PROJECT_PATH}seed-subreddits.json'
+OUTPUT_PATH = f'{PROJECT_PATH}data/'
+
+LOG_DESC = 'sample'
+LOG_FILE_PATH = f'{PROJECT_PATH}logs/{LOG_DESC}_{datetime.datetime.now()}.txt'
+
+SEEDS_DICT = json.load(open(INPUT_PATH))
+SEED_SUBREDDITS = SEEDS_DICT['all']
 
 def main():
     """Iterate through the sampling structure, saving the elements used in sampling at each level.
     """
 
     start = time.time()
+    start_time = datetime.datetime.now()
+
+    print("Initializing API Instance")
 
     reddit = calls.setup_access()
+
+    print("Initialization complete.")
 
     time_period = 'year'
     n_submissions = 10
@@ -45,7 +57,7 @@ def main():
             # iterate through the comments, retreiving each one's author
             for j, comment in enumerate(comments):
 
-                print(f'Fetching Author:\n\tPost: {i}\n\tComment: {j}\n\tSeed: {seed}')
+                print(f'{datetime.datetime.now()} - Fetching Seed: {seed}, Post: {i}, Comment: {j}')
 
                 user = calls.get_comment_author(reddit=reddit, comment_id=comment)
 
@@ -54,7 +66,8 @@ def main():
 
                 users['users'].append(user)
 
-        print(f'Finished: {seed}')
+            with open(LOG_FILE_PATH, "a") as log_file:
+                log_file.write(f'{start_time} - Finished Post {i} of seed "{seed}"\n')
 
     output_dict = {
         'seed_to_posts': seed_to_posts,
@@ -64,17 +77,17 @@ def main():
 
     # output sampling procedure
     with open(OUTPUT_PATH + "sampling-prodecure.json", "w") as outfile:
-        json.dump(output_dict, outfile)
+        json.dump(output_dict, outfile, indent=4)
 
     # output users dict
     with open(OUTPUT_PATH + "user-sample.json", "w") as outfile:
-        json.dump(users, outfile)
+        json.dump(users, outfile, indent=4)
 
     finished = time.time()
 
-    job_time = finished - start
+    job_time = (finished - start) / 60
 
-    print(f'Completion Time: {job_time}s')
+    print(f'Job took {job_time} minutes')
 
 if __name__ == "__main__":
     main()
