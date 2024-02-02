@@ -6,7 +6,7 @@ import calls
 
 # single sub for testing
 INPUT_PATH = '/home/reed/Projects/learned-toxicity-reddit/reddit-api/seed-subreddits.json'
-OUTPUT_PATH = '/home/reed/Projects/learned-toxicity-reddit/reddit-api/output/'
+OUTPUT_PATH = '/home/reed/Projects/learned-toxicity-reddit/reddit-api/data/'
 seeds_dict = json.load(open(INPUT_PATH))
 SEED_SUBREDDITS = seeds_dict['all']
 
