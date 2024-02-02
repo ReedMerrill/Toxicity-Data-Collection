@@ -58,7 +58,8 @@ def main():
             # iterate through the comments, retreiving each one's author
             for j, comment in enumerate(comments):
 
-                print(f'{datetime.datetime.now()} - Fetching Seed: {seed}, Post: {i}, Comment: {j}')
+                print(
+                    f'{datetime.datetime.now()} - Fetching Seed: {seed}, Post: {i + 1}, Comment: {j + 1}')
 
                 user = calls.get_comment_author(reddit=reddit, comment_id=comment)
 
@@ -68,7 +69,7 @@ def main():
                 users['users'].append(user)
 
             with open(LOG_FILE_PATH, "a") as log_file:
-                log_file.write(f'{start_time} - Finished Post {i} of seed "{seed}"\n')
+                log_file.write(f'{start_time} - Finished Post {i + 1} of seed "{seed}"\n')
 
     output_dict = {
         'seed_to_posts': seed_to_posts,
