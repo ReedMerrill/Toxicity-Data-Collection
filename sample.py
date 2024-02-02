@@ -11,9 +11,11 @@ PROJECT_PATH = '/home/reed/Projects/learned-toxicity-reddit/reddit-api/'
 INPUT_PATH = f'{PROJECT_PATH}seed-subreddits.json'
 OUTPUT_PATH = f'{PROJECT_PATH}data/'
 
+# log file setup
 LOG_DESC = 'sample'
 LOG_FILE_PATH = f'{PROJECT_PATH}logs/{LOG_DESC}_{datetime.datetime.now()}.txt'
 
+# load sample seeds
 SEEDS_DICT = json.load(open(INPUT_PATH))
 SEED_SUBREDDITS = SEEDS_DICT['all']
 
@@ -22,7 +24,6 @@ def main():
     """
 
     start = time.time()
-    start_time = datetime.datetime.now()
 
     print("Initializing API Instance")
 
@@ -30,13 +31,19 @@ def main():
 
     print("Initialization complete.")
 
+    # set subreddit sample parameters
     time_period = 'year'
     n_submissions = 10
 
+    # initialize sample logging dicts
     seed_to_posts = {}
     post_to_comments = {}
     comment_to_user = {}
     users = {'users': []}
+
+    # initialize output CSV
+    with open(OUTPUT_PATH + "user-sample.csv", "a") as outfile:
+        outfile.write(f'users\n')
 
     # iterate through the seed subreddits, getting a list of the IDs of top posts from each
     for seed in SEED_SUBREDDITS:
@@ -57,9 +64,6 @@ def main():
             # iterate through the comments, retreiving each one's author
             for j, comment in enumerate(comments):
 
-                print(
-                    f'{datetime.datetime.now()} - Fetching Seed: {seed}, Post: {i + 1}, Comment: {j + 1}')
-
                 user = calls.get_comment_author(reddit=reddit, comment_id=comment)
 
                 # add the new comment/user pair to the dict
@@ -79,11 +83,13 @@ def main():
 
                 # append the values to the output CSV
                 with open(OUTPUT_PATH + "user-sample.csv", "a") as outfile:
-                    outfile.write(f'{user_id},{comment_id}\n')
+                    outfile.write(f'{user_id}\n')
+
+                time.sleep(0.5)
 
             # logging to file
             with open(LOG_FILE_PATH, "a") as log_file:
-                log_file.write(f'{start_time} - Finished Post {i + 1} of seed "{seed}"\n')
+                log_file.write(f'{datetime.datetime.now()} - Finished Post {i + 1} of seed "{seed}"\n')
 
     output_dict = {
         'seed_to_posts': seed_to_posts,
