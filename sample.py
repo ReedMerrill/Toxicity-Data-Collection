@@ -9,14 +9,13 @@ import calls
 # single sub for testing
 PROJECT_PATH = '/home/reed/Projects/learned-toxicity-reddit/reddit-api/'
 INPUT_PATH = f'{PROJECT_PATH}seed-subreddits.json'
-OUTPUT_PATH = f'{PROJECT_PATH}output/'
+OUTPUT_PATH = f'{PROJECT_PATH}data/'
 
 LOG_DESC = 'sample'
 LOG_FILE_PATH = f'{PROJECT_PATH}logs/{LOG_DESC}_{datetime.datetime.now()}.txt'
 
 SEEDS_DICT = json.load(open(INPUT_PATH))
 SEED_SUBREDDITS = SEEDS_DICT['all']
-#SEED_SUBREDDITS = ['test']
 
 def main():
     """Iterate through the sampling structure, saving the elements used in sampling at each level.

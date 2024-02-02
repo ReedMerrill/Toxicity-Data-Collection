@@ -1,1 +1,1 @@
-Scripts for accessing the Reddit API.
+Scripts for retrieving data from the Reddit API.

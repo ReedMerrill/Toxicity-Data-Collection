@@ -1,4 +1,5 @@
 import praw
+import asyncpraw
 
 # credentials
 CLIENT_ID = "gB_we0e6sW9IK_Xjrw1szQ"
@@ -10,6 +11,16 @@ USERNAME = "bewchacca-lacca"
 def setup_access():
     """Create an instance for API access"""
     instance = praw.Reddit(
+        client_id=CLIENT_ID,
+        client_secret=CLIENT_SECRET,
+        password=PASSWORD,
+        user_agent=USER_AGENT,
+        username=USERNAME)
+    return instance
+
+async def setup_async_access():
+    """Create an instance for API access"""
+    instance = asyncpraw.Reddit(
         client_id=CLIENT_ID,
         client_secret=CLIENT_SECRET,
         password=PASSWORD,
@@ -54,3 +65,22 @@ def get_comment_metadata(reddit, comment_id):
     """TODO: get all the comment metadata needed for the main analysis"""
 
     return None
+
+def process_user_ids(id_list):
+    """Clean the user IDs obtained during runs of sample.py.
+
+    Inputs: list of user IDs
+    Returns: Cleaned list of user IDs
+        - removes duplicates
+        - removes None values
+    """
+
+    no_dupes = list(set(id_list))
+
+    return [user for user in no_dupes if user != "None"]
+
+async def get_user_comments(reddit, user_id):
+    """Takes a user ID and collects all of that user's comments.
+    """
+
+    return reddit.redditor(user_id).comments.new(limit=None)
