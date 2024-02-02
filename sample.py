@@ -7,7 +7,7 @@ import calls
 
 # single sub for testing
 PROJECT_PATH = '/home/reed/Projects/learned-toxicity-reddit/reddit-api/'
-INPUT_PATH = f'{PROJECT_PATH}seed-subreddits.json'
+INPUT_PATH = f'{PROJECT_PATH}data/seed-subreddits.json'
 OUTPUT_PATH = f'{PROJECT_PATH}data/'
 
 # log file setup
