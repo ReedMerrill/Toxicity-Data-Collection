@@ -3,7 +3,6 @@
 import json
 import time
 import datetime
-import sys
 import calls
 
 # single sub for testing
@@ -33,7 +32,7 @@ def main():
 
     # set subreddit sample parameters
     time_period = 'year'
-    n_submissions = 10
+    n_submissions = 3
 
     # initialize sample logging dicts
     seed_to_posts = {}
@@ -43,7 +42,7 @@ def main():
 
     # initialize output CSV
     with open(OUTPUT_PATH + "user-sample.csv", "a") as outfile:
-        outfile.write(f'users\n')
+        outfile.write('users\n')
 
     # iterate through the seed subreddits, getting a list of the IDs of top posts from each
     for seed in SEED_SUBREDDITS:
@@ -72,18 +71,9 @@ def main():
                 # append user/comment pair to dict
                 users['users'].append(user)
 
-                # format single key user dict for CSV output
-                # Extracting keys and values
-                user_id = list(user.keys())
-                comment_id = list(user.values())
-
-                # Output
-                user_id = user_id[0]
-                comment_id = comment_id[0]
-
                 # append the values to the output CSV
                 with open(OUTPUT_PATH + "user-sample.csv", "a") as outfile:
-                    outfile.write(f'{user_id}\n')
+                    outfile.write(f'{user}\n')
 
                 time.sleep(0.5)
 
