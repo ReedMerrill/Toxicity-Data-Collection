@@ -1,4 +1,4 @@
-"""Takes '/output/user-sample.json' as input and collects the last 1,000 comments made by each user.
+"""Takes '/output/user-sample.csv' as input and collects the last 1,000 comments made by each user.
 """
 import asyncio
 import pandas as pd
