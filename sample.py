@@ -65,8 +65,23 @@ def main():
                 # add the new comment/user pair to the dict
                 comment_to_user.update({comment: user})
 
+                # append user/comment pair to dict
                 users['users'].append(user)
 
+                # format single key user dict for CSV output
+                # Extracting keys and values
+                user_id = list(user.keys())
+                comment_id = list(user.values())
+
+                # Output
+                user_id = user_id[0]
+                comment_id = comment_id[0]
+
+                # append the values to the output CSV
+                with open(OUTPUT_PATH + "user-sample.csv", "a") as outfile:
+                    outfile.write(f'{user_id},{comment_id}\n')
+
+            # logging to file
             with open(LOG_FILE_PATH, "a") as log_file:
                 log_file.write(f'{start_time} - Finished Post {i + 1} of seed "{seed}"\n')
 
@@ -79,10 +94,6 @@ def main():
     # output sampling procedure
     with open(OUTPUT_PATH + "sampling-prodecure.json", "w") as outfile:
         json.dump(output_dict, outfile, indent=4)
-
-    # output users dict
-    with open(OUTPUT_PATH + "user-sample.json", "w") as outfile:
-        json.dump(users, outfile, indent=4)
 
     finished = time.time()
 
