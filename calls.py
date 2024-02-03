@@ -38,7 +38,6 @@ def get_top_posts(reddit, subreddit_name, time_period, n_submissions):
     and is more efficient.
     Returns: list of top post URLs
     """
-    
     # create the generator
     submission_generator = reddit.subreddit(subreddit_name).top(time_filter=time_period, limit=n_submissions)
     # return generator outputs as a list
@@ -61,12 +60,7 @@ def get_comment_author(reddit, comment_id):
     """
     return str(reddit.comment(comment_id).author)
 
-def get_comment_metadata(reddit, comment_id):
-    """TODO: get all the comment metadata needed for the main analysis"""
-
-    return None
-
-def process_user_ids(id_list):
+async def process_user_ids(id_list):
     """Clean the user IDs obtained during runs of sample.py.
 
     Inputs: list of user IDs
@@ -74,7 +68,6 @@ def process_user_ids(id_list):
         - removes duplicates
         - removes None values
     """
-
     no_dupes = list(set(id_list))
 
     return [user for user in no_dupes if user != "None"]
@@ -82,5 +75,9 @@ def process_user_ids(id_list):
 async def get_user_comments(reddit, user_id):
     """Takes a user ID and collects all of that user's comments.
     """
-
     return reddit.redditor(user_id).comments.new(limit=None)
+
+def get_comment_metadata(reddit, comment_id):
+    """TODO: get all the comment metadata needed for the main analysis"""
+
+    return None
