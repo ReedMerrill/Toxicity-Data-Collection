@@ -18,16 +18,6 @@ def setup_access():
         username=USERNAME)
     return instance
 
-async def setup_async_access():
-    """Create an instance for API access"""
-    instance = asyncpraw.Reddit(
-        client_id=CLIENT_ID,
-        client_secret=CLIENT_SECRET,
-        password=PASSWORD,
-        user_agent=USER_AGENT,
-        username=USERNAME)
-    return instance
-
 
 def get_top_posts(reddit, subreddit_name, time_period, n_submissions):
     """Takes the name of a subreddit, a time period, and the desired number of submissions
@@ -39,7 +29,8 @@ def get_top_posts(reddit, subreddit_name, time_period, n_submissions):
     Returns: list of top post URLs
     """
     # create the generator
-    submission_generator = reddit.subreddit(subreddit_name).top(time_filter=time_period, limit=n_submissions)
+    submission_generator = reddit.subreddit(subreddit_name).top(time_filter=time_period,
+                                                                limit=n_submissions)
     # return generator outputs as a list
     return [submission.id for submission in submission_generator]
     
@@ -51,33 +42,56 @@ def get_post_comments_ids(reddit, submission_id):
     comments = reddit.submission(submission_id).comments
     # replace_more() updates the comment forest by resolving instances of MoreComments
     comments.replace_more()
-    # list flattens the comment forest to a simple list of comments, extracting all comment replies
+    # list() flattens the comment forest to a simple list of all comments on the submission
     return [comment.id for comment in comments.list()]
 
-    # retreived the author of each comment
+
 def get_comment_author(reddit, comment_id):
     """Takes a comment ID and return that comment's author.
     """
     return str(reddit.comment(comment_id).author)
 
-async def process_user_ids(id_list):
+
+def process_user_ids(id_list):
     """Clean the user IDs obtained during runs of sample.py.
 
     Inputs: list of user IDs
     Returns: Cleaned list of user IDs
         - removes duplicates
+        - removes AutoModerator
         - removes None values
     """
     no_dupes = list(set(id_list))
 
-    return [user for user in no_dupes if user != "None"]
+    return [user for user in no_dupes if user != "None" and user != "AutoModerator"]
 
-async def get_user_comments(reddit, user_id):
-    """Takes a user ID and collects all of that user's comments.
+
+def get_user_comments(reddit, user_id):
+    """Takes a user ID and collects up to 1,000 of that user's most recent comments, with metadata.
+    Filters "distinguished" comments, which are used to add a "MOD" decorator (used when engaging
+    as a moderator rather than a community member).
     """
-    return reddit.redditor(user_id).comments.new(limit=None)
+    # get a ListingGenerator for up to the user's 1,000 most recent comments
+    user_comment_generator = reddit.redditor(user_id).comments.new(limit=None)
 
-def get_comment_metadata(reddit, comment_id):
-    """TODO: get all the comment metadata needed for the main analysis"""
+    metadata_dict = {}
 
-    return None
+    for comment in user_comment_generator:
+        # don't collect distinguished comments
+        if comment.distinguished is not None:
+            pass
+        
+        else:
+            metadata_dict = {
+                'comment_id': comment.id, # store the user_id without doing a call
+                'user_id': user_id,
+                'post_id': comment.link_id,
+                'subreddit_id': comment.subreddit_id
+                'timestamp': comment.created_utc,
+                'text': comment.body,
+                'upvotes': comment.score,
+                'parent_comment': comment.parent_id # if top-level, then return the submission ID
+                }
+
+        return metadata_dict
+
