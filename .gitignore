@@ -2,3 +2,4 @@ __pycache__/*
 logs/*
 testing/tmp.py
 data/test.csv
+testing/__pycache__/*
