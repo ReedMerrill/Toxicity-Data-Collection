@@ -20,14 +20,14 @@ def main():
 
     # setup a PRAW reddit instance
     reddit = calls.setup_access()
+    print('API Authentication Successful')
     # read in users list
     users = pd.read_csv(INPUT_PATH)
     # Clean list of users for duplicates and mods
     users_list = calls.process_user_ids(list(users['users'])) 
 
-    user_comment_data = {}
-
     # iterate over list of user, extracting each user's comment metadata
+    user_comment_data = {}
     for i, user in enumerate(users_list):
 
         # initialize dict to store a single user's comments
