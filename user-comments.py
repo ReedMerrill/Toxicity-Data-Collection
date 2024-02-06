@@ -36,7 +36,7 @@ def main():
         # initialize dict to store a single user's comments
         user_comments = {}
         # call for comment metadata from API
-        comments = calls.get_user_comments(reddit=reddit, user_id=user,
+        comments = calls.get_user_comments(reddit=reddit, user_id=user, user_i=i,
                                            limit=1000, log_name=log_name)
         # add user comments to, mapping them to the username
         user_comments.update({user: comments})
