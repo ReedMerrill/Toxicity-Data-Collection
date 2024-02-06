@@ -88,12 +88,12 @@ def get_user_comments(reddit, user_id, user_i, limit=1000, log_name='log'):
     user_comment_generator = reddit.redditor(user_id)
 
     user_comments = {}
+    
+    # for logging
+    comment_j = 1
 
     # iterate over the generator, calling each item
-    for i, comment in enumerate(user_comment_generator.comments.new(limit=limit)):
-
-        #logging
-        print(f'extracting comment {i +1}')
+    for comment in user_comment_generator.comments.new(limit=limit):
 
         # initialize try/except vars
         n_retries = 0 # retry counter
@@ -118,13 +118,13 @@ def get_user_comments(reddit, user_id, user_i, limit=1000, log_name='log'):
                         }
 
                     user_comments.update({comment.id: comment_metadata})
-                    print(f'comment dict updated -- user {user_i + 1}, comment {i + 1}')
+                    print(f'comment dict updated -- user {user_i + 1}, comment {comment_j}')
 
             # if a TooManyRequsts error is raised then the API rate limit has been exceeded.
             # Retry after sleeping. Sleep duration increases by a factor of 2 for 4 retries, and then gives up.
             except TooManyRequests as e:
-                log_to_file(log_name, f'Error: {e} while fetching user {i + 1}')
-                print(f'Error: {e} while fetching user {i + 1}')
+                log_to_file(log_name, f'Error: {e} while fetching user {comment_j}')
+                print(f'Error: {e} while fetching user {comment_j}')
 
                 if n_retries == 0:
                     sleep_time = 1
@@ -153,9 +153,11 @@ def get_user_comments(reddit, user_id, user_i, limit=1000, log_name='log'):
 
             # catch all other possible exceptions
             except Exception as e:
-                log_to_file(log_name, f'Unresolved Error: "{e}" while fetching user {i + 1}')
-                print(f'Error: {e} while fetching user {i + 1}')
+                log_to_file(log_name, f'Unresolved Error: "{e}" while fetching user {comment_j}')
+                print(f'Error: {e} while fetching user {comment_j}')
                 # set to 4 so the try loop stops
                 n_retries = 4
+
+        comment_j += 1
                 
     return user_comments
