@@ -1,1 +1,92 @@
-{}
+{
+    "kp1w98r": {
+        "comment_id": "kp1w98r",
+        "post_id": "t3_1ajmbbt",
+        "subreddit_id": "t5_ap1gnz",
+        "timestamp": 1707154691.0,
+        "text": "testing",
+        "upvotes": 1,
+        "parent_comment": "t3_1ajmbbt"
+    },
+    "kohgij3": {
+        "comment_id": "kohgij3",
+        "post_id": "t3_1agd190",
+        "subreddit_id": "t5_2sptq",
+        "timestamp": 1706818741.0,
+        "text": "Any parametric model for time series forecasting would help with this. Do you want something that adaptively models multiple KPIs depending on how much investment is made in different areas? I think then the easiest way to go would be to set out a list of things that can be invested in for each KPI and then tweaks things to model how changes occur given a fixed \"budget\". You could have one model for each KPI and take money out of the \"budget\" to change the amount of money put into each KPI's related investment areas. In practice, this would involve making predictions with each model with investment amounts as the values of your independent variables that you're generating a prediction on.\n\nEach model would first need to be trained on at least some of the businesses historical data and you would probably want to make inflation adjustments for your predictions once everything else has been done.",
+        "upvotes": 2,
+        "parent_comment": "t3_1agd190"
+    },
+    "kohfgjt": {
+        "comment_id": "kohfgjt",
+        "post_id": "t3_1agc528",
+        "subreddit_id": "t5_2sptq",
+        "timestamp": 1706818385.0,
+        "text": "Oh, and, of course, the first one having code examples is pretty awesome :)",
+        "upvotes": 1,
+        "parent_comment": "t1_kohfe8r"
+    },
+    "kohfe8r": {
+        "comment_id": "kohfe8r",
+        "post_id": "t3_1agc528",
+        "subreddit_id": "t5_2sptq",
+        "timestamp": 1706818363.0,
+        "text": "The [Foundations of Statistics for Data Scientists: With R and Python](https://www.amazon.com/Foundations-Statistics-Data-Scientists-Statistical/dp/0367748452) is great. It teaches you about all of the foundational stuff for parametric statistics, which has a lot of carry-over even if you end up working on GBMs or deep neural networks and need to understand gradient descent or how a loss function works.\n\nI was also recently recommended [this](https://www.amazon.com/Elements-Statistical-Learning-Prediction-Statistics/dp/0387848576), but I haven't used it yet.",
+        "upvotes": 1,
+        "parent_comment": "t3_1agc528"
+    },
+    "koh8006": {
+        "comment_id": "koh8006",
+        "post_id": "t3_1aft428",
+        "subreddit_id": "t5_2uas2",
+        "timestamp": 1706815828.0,
+        "text": ">Surprising? It is entirely consistent with the bayesian prior that people will be more reluctant to confide in people they know are mandatory reports.\n\nOk, I'll concede that point. From the perspective of church policy I have no issues with mandatory reporting. The church prioritizes stopping ongoing abuse -- regardless of if reporting is mandatory or not.\n\n>Yet 1 study is better than 0 studies. I look forward to additional data.\n\nOne of my issues is that r/dustinsc was using the linked article to make a causal claim, and one study is rarely enough to do that. Sorry for not being clearer, but the authors of that article explicitly state that they can't make causal claims, and at 2%, the differences in reports between mandatory reporting and non-mandatory reporting jurisdictions is quite small.",
+        "upvotes": 1,
+        "parent_comment": "t1_koh5h1p"
+    },
+    "koh67kv": {
+        "comment_id": "koh67kv",
+        "post_id": "t3_1aevxi2",
+        "subreddit_id": "t5_2uas2",
+        "timestamp": 1706815201.0,
+        "text": "I'm also Canadian and knew it was a joke right away xD \n\nIts very Canadian to not care much about being Canadian",
+        "upvotes": 1,
+        "parent_comment": "t1_kogpqsq"
+    },
+    "koh5kur": {
+        "comment_id": "koh5kur",
+        "post_id": "t3_1aevxi2",
+        "subreddit_id": "t5_2uas2",
+        "timestamp": 1706814968.0,
+        "text": "This post (and I'm sure the book as well) is amazing! I definitely want a copy.",
+        "upvotes": 1,
+        "parent_comment": "t3_1aevxi2"
+    },
+    "koh30my": {
+        "comment_id": "koh30my",
+        "post_id": "t3_1aft428",
+        "subreddit_id": "t5_2uas2",
+        "timestamp": 1706814104.0,
+        "text": "I agree there probably are others, but we should cite broad amounts of evidence if we really want to make a claim about empirical truth. One study is almost never enough.  The article linked above (https://www.ncbi.nlm.nih.gov/pmc/articles/PMC5388942/) is a good example of one study being insufficient, in this case because people want to use it to make causal claims, when the actual paper does not conduct a causal investigation. Other papers will need to piggyback on this one's findings to establish causation. The paper linked is only reporting a correlation, and correlation is not causation, which is why their \"Limitations\" section says: \n\n>Lastly, the cross-sectional nature of these data, collected in 2013, precludes drawing conclusions about the causal effects of UMR on child physical abuse reporting and identification.",
+        "upvotes": 3,
+        "parent_comment": "t1_koh0bb2"
+    },
+    "kogflo1": {
+        "comment_id": "kogflo1",
+        "post_id": "t3_1ag54g6",
+        "subreddit_id": "t5_2uas2",
+        "timestamp": 1706806219.0,
+        "text": "> the Lord has asked every worthy, able young man to prepare for and serve a mission. (President Nelson, April 2022)\n\nThe direction isn't just to go, its also to *prepare*. The spiritual preparation involved will lead those who sincerely do it to have the desire and testimony that is required.",
+        "upvotes": 3,
+        "parent_comment": "t1_koep1e4"
+    },
+    "kogd4n4": {
+        "comment_id": "kogd4n4",
+        "post_id": "t3_1aft428",
+        "subreddit_id": "t5_2uas2",
+        "timestamp": 1706805369.0,
+        "text": "I stand partially (self) corrected: They did control for some things, but a regression analysis with control variables doesn't provide a causal argument. It gives weak causal evidence, if any at all. This quote from their \"Limitations\" section sums it up:\n\n>Lastly, the cross-sectional nature of these data, collected in 2013, precludes drawing conclusions about the causal effects of UMR on child physical abuse reporting and identification. \n\nIt is also worth noting that the authors used aggregates of the individual characteristics of individuals (reporters, abusers, the abused) at the level of states (US), but didn't include other variables about states, such as related laws on child protection or abuse prevention.",
+        "upvotes": 1,
+        "parent_comment": "t1_kog80ej"
+    }
+}

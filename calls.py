@@ -66,41 +66,30 @@ def process_user_ids(id_list):
     return [user for user in no_dupes if user != "None" and user != "AutoModerator"]
 
 
-def get_user_comments(reddit, user_id, limit=500):
+def get_user_comments(reddit, user_id, limit=1000):
     """Takes a user ID and collects up to 1,000 of that user's most recent comments, with metadata.
     Filters "distinguished" comments, which are used to add a "MOD" decorator (used when engaging
     as a moderator rather than a community member).
     """
     # get a ListingGenerator for up to the user's 1,000 most recent comments
-    user_comment_generator = reddit.redditor(user_id).comments.new(limit=limit)
+    user_comment_generator = reddit.redditor(user_id)
 
-    print(f'Fetched comment generator for {user_id}')
-
-    comments = {}
+    user_comments = {}
 
     # iterate over the generator, calling each item
-    for i, comment in enumerate(user_comment_generator):
+    for comment in user_comment_generator.comments.new(limit=limit):
 
-        print(f'fetching comment {i + 1}')
         # don't collect distinguished comments
-        mod_comment = comment.distinguished
-        print(mod_comment)
-        print(type(mod_comment))
-        if str(mod_comment) != "moderator":
-            comment_metadata = {
-                'comment_id': comment.id,
-                'user_id': user_id, # store the user_id without doing a call
-                'post_id': comment.link_id,
-                'subreddit_id': comment.subreddit_id,
-                'timestamp': comment.created_utc,
-                'text': comment.body,
-                'upvotes': comment.score,
-                'parent_comment': comment.parent_id # if top-level, then return the submission ID
-                }
-            
-            comments.update(comment_metadata) 
+        comment_metadata = {
+            'comment_id': comment.id,
+            'post_id': comment.link_id,
+            'subreddit_id': comment.subreddit_id,
+            'timestamp': comment.created_utc,
+            'text': comment.body,
+            'upvotes': comment.score,
+            'parent_comment': comment.parent_id # if top-level, then returns the submission ID
+            }
         
-        else:
-            print(f'skipping comment made as a mod.')
-
-        return comments 
+        user_comments.update({comment.id: comment_metadata})
+        
+    return user_comments 

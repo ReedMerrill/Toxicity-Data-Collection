@@ -7,7 +7,7 @@ import calls
 
 reddit = calls.setup_access()
 
-user = calls.get_comment_author(reddit=reddit, comment_id='kp1w98r')
+user = 'bewchacca-lacca'
 
 comments = calls.get_user_comments(reddit=reddit, user_id=user, limit=10)
 
