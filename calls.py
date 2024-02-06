@@ -92,8 +92,8 @@ def get_user_comments(reddit, user_id, limit=1000, log_name='log'):
     # iterate over the generator, calling each item
     for i, comment in enumerate(user_comment_generator.comments.new(limit=limit)):
 
-        # logging
-        print(f'Fetching user {i + 1}')
+        #logging
+        print('extracting comment {i +1}')
 
         # initialize try/except vars
         n_retries = 0 # retry counter

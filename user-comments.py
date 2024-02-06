@@ -30,6 +30,9 @@ def main():
     user_comment_data = {}
     for i, user in enumerate(users_list):
 
+        # logging
+        print(f'Fetching user {i + 1}')
+
         # initialize dict to store a single user's comments
         user_comments = {}
         # call for comment metadata from API
@@ -44,7 +47,7 @@ def main():
         total_time = time.time() - start
         print(f'Finished User {i + 1}. Took {total_time}s')
 
-    with open(OUTPUT_PATH + 'all-comments-test.json', 'w') as file:
+    with open(OUTPUT_PATH + 'user-comments.json', 'w') as file:
         json.dump(user_comment_data, file, indent=4)
 
 if __name__ == "__main__":
