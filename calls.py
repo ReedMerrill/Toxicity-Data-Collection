@@ -1,5 +1,4 @@
 import praw
-import asyncpraw
 
 # credentials
 CLIENT_ID = "gB_we0e6sW9IK_Xjrw1szQ"

@@ -5,6 +5,7 @@ import time
 import datetime
 import calls
 
+
 # single sub for testing
 PROJECT_PATH = '/home/reed/Projects/learned-toxicity-reddit/reddit-api/'
 INPUT_PATH = f'{PROJECT_PATH}data/seed-subreddits.json'
@@ -18,8 +19,10 @@ LOG_FILE_PATH = f'{PROJECT_PATH}logs/{LOG_DESC}_{datetime.datetime.now()}.txt'
 SEEDS_DICT = json.load(open(INPUT_PATH))
 SEED_SUBREDDITS = SEEDS_DICT['all']
 
+
 def main():
-    """Iterate through the sampling structure, saving the elements used in sampling at each level.
+    """Iterate through the sampling structure, saving the elements used in
+    sampling at each level.
     """
 
     start = time.time()
@@ -44,26 +47,29 @@ def main():
     with open(OUTPUT_PATH + "user-sample.csv", "a") as outfile:
         outfile.write('users\n')
 
-    # iterate through the seed subreddits, getting a list of the IDs of top posts from each
+    # iterate through the seed subreddits, getting a list of top posts IDs
     for seed in SEED_SUBREDDITS:
 
-        posts = calls.get_top_posts(reddit=reddit, subreddit_name=seed, time_period=time_period,
-                                    n_submissions=n_submissions)
+        posts = calls.get_top_posts(
+                reddit=reddit, subreddit_name=seed, time_period=time_period,
+                n_submissions=n_submissions)
 
         # add a key "seed" with the post IDs as items
         seed_to_posts.update({seed: posts})
 
-        # iterate through the posts returned from the seed, retreiving their comment IDs
+        # iterate through the posts, retreiving their comment IDs
         for i, post in enumerate(posts):
 
-            comments = calls.get_post_comments_ids(reddit=reddit, submission_id=post)
+            comments = calls.get_post_comments_ids(
+                    reddit=reddit, submission_id=post)
 
             post_to_comments.update({post: comments})
 
             # iterate through the comments, retreiving each one's author
-            for j, comment in enumerate(comments):
+            for comment in comments:
 
-                user = calls.get_comment_author(reddit=reddit, comment_id=comment)
+                user = calls.get_comment_author(
+                        reddit=reddit, comment_id=comment)
 
                 # add the new comment/user pair to the dict
                 comment_to_user.update({comment: user})
@@ -77,9 +83,10 @@ def main():
 
                 time.sleep(0.5)
 
+            log_string = f'{datetime.datetime.now()} - Finished Post {i + 1} of seed "{seed}"\n'
             # logging to file
             with open(LOG_FILE_PATH, "a") as log_file:
-                log_file.write(f'{datetime.datetime.now()} - Finished Post {i + 1} of seed "{seed}"\n')
+                log_file.write(log_string)
 
     output_dict = {
         'seed_to_posts': seed_to_posts,
@@ -96,6 +103,7 @@ def main():
     job_time = (finished - start) / 60
 
     print(f'Job took {job_time} minutes')
+
 
 if __name__ == "__main__":
     main()
