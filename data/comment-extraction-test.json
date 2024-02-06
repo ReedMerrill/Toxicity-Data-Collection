@@ -1,92 +1,92 @@
 {
-    "kp1w98r": {
-        "comment_id": "kp1w98r",
-        "post_id": "t3_1ajmbbt",
-        "subreddit_id": "t5_ap1gnz",
-        "timestamp": 1707154691.0,
-        "text": "testing",
-        "upvotes": 1,
-        "parent_comment": "t3_1ajmbbt"
-    },
-    "kohgij3": {
-        "comment_id": "kohgij3",
-        "post_id": "t3_1agd190",
-        "subreddit_id": "t5_2sptq",
-        "timestamp": 1706818741.0,
-        "text": "Any parametric model for time series forecasting would help with this. Do you want something that adaptively models multiple KPIs depending on how much investment is made in different areas? I think then the easiest way to go would be to set out a list of things that can be invested in for each KPI and then tweaks things to model how changes occur given a fixed \"budget\". You could have one model for each KPI and take money out of the \"budget\" to change the amount of money put into each KPI's related investment areas. In practice, this would involve making predictions with each model with investment amounts as the values of your independent variables that you're generating a prediction on.\n\nEach model would first need to be trained on at least some of the businesses historical data and you would probably want to make inflation adjustments for your predictions once everything else has been done.",
+    "kp3s7be": {
+        "comment_id": "kp3s7be",
+        "post_id": "t3_1ailfbp",
+        "subreddit_id": "t5_2qh4j",
+        "timestamp": 1707178046.0,
+        "text": ">Of course not, because they're Muslim and you're too scared to insult anyone or anything that is related to Islam.\n\nI'm quite anti-religious, especially when it comes to conservative interpretations of religion.\n\n>Exactly, you recognize that these people are not peaceful and yet you still think Israel is in the wrong.\n\nI recognize that victims of oppression do not always react peacefully, nor do they always react appropriately. Are you sure you've never celebrated any violent resistance movements? Do you condone every single action of those movements?\n\n>About either being violent themselves or supporting those who are violent\n\nCollective punishment and killing people for thought crimes is inherently wrong.\n\n>The one country, Germany?\n\nNo. Germany (or the Nazi empire) is certainly not the only place where Jewish people were persecuted or rejected.",
         "upvotes": 2,
-        "parent_comment": "t3_1agd190"
+        "parent_comment": "t1_kozwlj0"
     },
-    "kohfgjt": {
-        "comment_id": "kohfgjt",
-        "post_id": "t3_1agc528",
-        "subreddit_id": "t5_2sptq",
-        "timestamp": 1706818385.0,
-        "text": "Oh, and, of course, the first one having code examples is pretty awesome :)",
+    "kp3qeve": {
+        "comment_id": "kp3qeve",
+        "post_id": "t3_1ailfbp",
+        "subreddit_id": "t5_2qh4j",
+        "timestamp": 1707177367.0,
+        "text": "I don't think from a humanitarian or moral standpoint it's better for Egypt not to accept them in. From that perspective, which I personally consider the most important perspective, Gazans should be given the option to flee. \n\nOne potentially negative aspect of that is that it might actually increase the attacks. With those gates open, Israel is incentivized to ramp up its assault and get everyone to flee. And the people who don't flee will be blamed for their own deaths, because they could have ran but didn't. But overall, it remains better to offer help to those who desperately need it.\n\nBut it's also not a very realistic expectation, because it's very rare for countries to sacrifice themselves to that extent. It's hard for me to be upset with Egypt for doing what virtually every country in the world would do if they were in Egypt's shoes.\n\nThere's plenty of other reasons to harshly criticize Egypt though.",
+        "upvotes": 2,
+        "parent_comment": "t1_kp00q55"
+    },
+    "koy6yh2": {
+        "comment_id": "koy6yh2",
+        "post_id": "t3_1ailfbp",
+        "subreddit_id": "t5_2qh4j",
+        "timestamp": 1707089505.0,
+        "text": "There are various differences with Ukraine. Europe isn't coordinating with Russia so that Russia can take over Ukraine. There's a very high likelihood that Ukrainian refugees will be able to return to Ukraine. And there's also a lot of countries sharing the responsibility of taking in refugees. \n\nMeanwhile Egypt has been coordinating with Israel and if it opens the borders, it will be seen as an act to facilitate Israel's desire to take over Gaza. Those Palestinians will never be able to return. Nor will the world have much interest in helping them.",
+        "upvotes": -2,
+        "parent_comment": "t1_koy0dph"
+    },
+    "koxhaxj": {
+        "comment_id": "koxhaxj",
+        "post_id": "t3_1ailfbp",
+        "subreddit_id": "t5_2qh4j",
+        "timestamp": 1707079968.0,
+        "text": "I don't think Egypt, Jordan and Lebanon are necessarily that much in the wrong. I just made the case for why it makes sense for Egypt not to accept over a million of forcefully displaced people. And I don't know what Palestinian civilians have to be right or wrong about. Existing?\n\nThe joke relating to being a jerk can be true to an extent, but I don't think lots of people and countries snubbing and attacking Jewish people around the WW2 era were indicative of the qualities of those Jewish people. It's not unprecedented for relatively weak people to get fucked by their surroundings.",
+        "upvotes": -4,
+        "parent_comment": "t1_koxafxn"
+    },
+    "kox4u4o": {
+        "comment_id": "kox4u4o",
+        "post_id": "t3_1ailfbp",
+        "subreddit_id": "t5_2qh4j",
+        "timestamp": 1707075532.0,
+        "text": "Indeed refugees who got kicked out of their homeland by force may not be the most stable and passive people. And they may not look too kindly on the leadership of a country that has close ties to the United States and has been collaborating with Israel.\n\nImagine that playing out in western Europe. Over a million Belgians violently and traumatically get kicked out of their territory into the Netherlands by France with U.S. support. And the Netherlands has close ties with the U.S. and had been collaborating with France.",
+        "upvotes": -13,
+        "parent_comment": "t1_kowv527"
+    },
+    "kowsb4z": {
+        "comment_id": "kowsb4z",
+        "post_id": "t3_1aiquld",
+        "subreddit_id": "t5_2r2jt",
+        "timestamp": 1707071117.0,
+        "text": "That's not what a partner is. I think it'd be best if you picked a more accurate description, like your annoying flatmate.",
+        "upvotes": 2,
+        "parent_comment": "t3_1aiquld"
+    },
+    "kowqbrh": {
+        "comment_id": "kowqbrh",
+        "post_id": "t3_1ailfbp",
+        "subreddit_id": "t5_2qh4j",
+        "timestamp": 1707070442.0,
+        "text": "I also find it strange that Egypt is not assisting Israel in cleansing Gaza of Palestinians.",
         "upvotes": 1,
-        "parent_comment": "t1_kohfe8r"
+        "parent_comment": "t1_kovxuip"
     },
-    "kohfe8r": {
-        "comment_id": "kohfe8r",
-        "post_id": "t3_1agc528",
-        "subreddit_id": "t5_2sptq",
-        "timestamp": 1706818363.0,
-        "text": "The [Foundations of Statistics for Data Scientists: With R and Python](https://www.amazon.com/Foundations-Statistics-Data-Scientists-Statistical/dp/0367748452) is great. It teaches you about all of the foundational stuff for parametric statistics, which has a lot of carry-over even if you end up working on GBMs or deep neural networks and need to understand gradient descent or how a loss function works.\n\nI was also recently recommended [this](https://www.amazon.com/Elements-Statistical-Learning-Prediction-Statistics/dp/0387848576), but I haven't used it yet.",
+    "kowero6": {
+        "comment_id": "kowero6",
+        "post_id": "t3_1aiiegy",
+        "subreddit_id": "t5_3cs2l",
+        "timestamp": 1707066410.0,
+        "text": "Yeah, it's trending now and probably somewhat of a meme.",
         "upvotes": 1,
-        "parent_comment": "t3_1agc528"
+        "parent_comment": "t1_kow1281"
     },
-    "koh8006": {
-        "comment_id": "koh8006",
-        "post_id": "t3_1aft428",
-        "subreddit_id": "t5_2uas2",
-        "timestamp": 1706815828.0,
-        "text": ">Surprising? It is entirely consistent with the bayesian prior that people will be more reluctant to confide in people they know are mandatory reports.\n\nOk, I'll concede that point. From the perspective of church policy I have no issues with mandatory reporting. The church prioritizes stopping ongoing abuse -- regardless of if reporting is mandatory or not.\n\n>Yet 1 study is better than 0 studies. I look forward to additional data.\n\nOne of my issues is that r/dustinsc was using the linked article to make a causal claim, and one study is rarely enough to do that. Sorry for not being clearer, but the authors of that article explicitly state that they can't make causal claims, and at 2%, the differences in reports between mandatory reporting and non-mandatory reporting jurisdictions is quite small.",
+    "koweipp": {
+        "comment_id": "koweipp",
+        "post_id": "t3_1aifufv",
+        "subreddit_id": "t5_2qh03",
+        "timestamp": 1707066321.0,
+        "text": "Guessing something is hardly a delusion. It's not that serious.\n\nI'll find out for sure whenever Suicide Squad is on Gamepass or dirt cheap. Maybe I'll find out that I was wrong.",
         "upvotes": 1,
-        "parent_comment": "t1_koh5h1p"
+        "parent_comment": "t1_kovjz5p"
     },
-    "koh67kv": {
-        "comment_id": "koh67kv",
-        "post_id": "t3_1aevxi2",
-        "subreddit_id": "t5_2uas2",
-        "timestamp": 1706815201.0,
-        "text": "I'm also Canadian and knew it was a joke right away xD \n\nIts very Canadian to not care much about being Canadian",
-        "upvotes": 1,
-        "parent_comment": "t1_kogpqsq"
-    },
-    "koh5kur": {
-        "comment_id": "koh5kur",
-        "post_id": "t3_1aevxi2",
-        "subreddit_id": "t5_2uas2",
-        "timestamp": 1706814968.0,
-        "text": "This post (and I'm sure the book as well) is amazing! I definitely want a copy.",
-        "upvotes": 1,
-        "parent_comment": "t3_1aevxi2"
-    },
-    "koh30my": {
-        "comment_id": "koh30my",
-        "post_id": "t3_1aft428",
-        "subreddit_id": "t5_2uas2",
-        "timestamp": 1706814104.0,
-        "text": "I agree there probably are others, but we should cite broad amounts of evidence if we really want to make a claim about empirical truth. One study is almost never enough.  The article linked above (https://www.ncbi.nlm.nih.gov/pmc/articles/PMC5388942/) is a good example of one study being insufficient, in this case because people want to use it to make causal claims, when the actual paper does not conduct a causal investigation. Other papers will need to piggyback on this one's findings to establish causation. The paper linked is only reporting a correlation, and correlation is not causation, which is why their \"Limitations\" section says: \n\n>Lastly, the cross-sectional nature of these data, collected in 2013, precludes drawing conclusions about the causal effects of UMR on child physical abuse reporting and identification.",
-        "upvotes": 3,
-        "parent_comment": "t1_koh0bb2"
-    },
-    "kogflo1": {
-        "comment_id": "kogflo1",
-        "post_id": "t3_1ag54g6",
-        "subreddit_id": "t5_2uas2",
-        "timestamp": 1706806219.0,
-        "text": "> the Lord has asked every worthy, able young man to prepare for and serve a mission. (President Nelson, April 2022)\n\nThe direction isn't just to go, its also to *prepare*. The spiritual preparation involved will lead those who sincerely do it to have the desire and testimony that is required.",
-        "upvotes": 3,
-        "parent_comment": "t1_koep1e4"
-    },
-    "kogd4n4": {
-        "comment_id": "kogd4n4",
-        "post_id": "t3_1aft428",
-        "subreddit_id": "t5_2uas2",
-        "timestamp": 1706805369.0,
-        "text": "I stand partially (self) corrected: They did control for some things, but a regression analysis with control variables doesn't provide a causal argument. It gives weak causal evidence, if any at all. This quote from their \"Limitations\" section sums it up:\n\n>Lastly, the cross-sectional nature of these data, collected in 2013, precludes drawing conclusions about the causal effects of UMR on child physical abuse reporting and identification. \n\nIt is also worth noting that the authors used aggregates of the individual characteristics of individuals (reporters, abusers, the abused) at the level of states (US), but didn't include other variables about states, such as related laws on child protection or abuse prevention.",
-        "upvotes": 1,
-        "parent_comment": "t1_kog80ej"
+    "kowdo32": {
+        "comment_id": "kowdo32",
+        "post_id": "t3_1aiiegy",
+        "subreddit_id": "t5_3cs2l",
+        "timestamp": 1707066018.0,
+        "text": "I've often been the person pointing out that certain posts are ads. But the idea that Apple or Tesla would spend money on showing their toys being used in dangerous and potentially illegal ways is a bit far-fetched. My other explanation is more plausible.",
+        "upvotes": 2,
+        "parent_comment": "t1_kow8q7k"
     }
 }

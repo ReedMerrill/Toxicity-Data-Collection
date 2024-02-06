@@ -1,4 +1,9 @@
+"""A collection of wrappers for PRAW.
+"""
+import time
 import praw
+from prawcore.exceptions import TooManyRequests
+
 
 # credentials
 CLIENT_ID = "gB_we0e6sW9IK_Xjrw1szQ"
@@ -62,33 +67,94 @@ def process_user_ids(id_list):
     """
     no_dupes = list(set(id_list))
 
-    return [user for user in no_dupes if user != "None" and user != "AutoModerator"]
+    return [user for user in no_dupes if user not in ("None", "AutoModerator")]
 
+def log_to_file(name, message):
+    """output logging events to a file
+    """
+    with open(f'logs/{name}.txt', 'a') as file:
+        file.write(message)
 
-def get_user_comments(reddit, user_id, limit=1000):
+def get_user_comments(reddit, user_id, limit=1000, log_name='log'):
     """Takes a user ID and collects up to 1,000 of that user's most recent comments, with metadata.
     Filters "distinguished" comments, which are used to add a "MOD" decorator (used when engaging
     as a moderator rather than a community member).
     """
+
+    # logging
+    log_name = log_name
+
     # get a ListingGenerator for up to the user's 1,000 most recent comments
     user_comment_generator = reddit.redditor(user_id)
 
     user_comments = {}
 
     # iterate over the generator, calling each item
-    for comment in user_comment_generator.comments.new(limit=limit):
+    for i, comment in enumerate(user_comment_generator.comments.new(limit=limit)):
 
-        # don't collect distinguished comments
-        comment_metadata = {
-            'comment_id': comment.id,
-            'post_id': comment.link_id,
-            'subreddit_id': comment.subreddit_id,
-            'timestamp': comment.created_utc,
-            'text': comment.body,
-            'upvotes': comment.score,
-            'parent_comment': comment.parent_id # if top-level, then returns the submission ID
-            }
-        
-        user_comments.update({comment.id: comment_metadata})
-        
-    return user_comments 
+        # logging
+        print(f'Fetching user {i + 1}')
+
+        # initialize try/except vars
+        n_retries = 0 # retry counter
+        sleep_time = 0 # retry sleep time
+
+        # retry loop
+        while n_retries < 4:
+            try:
+                # Main block: fetch comment metadata
+                # don't collect distinguished comments
+                if comment.distinguished != 'moderator':
+
+                    # data to collect
+                    comment_metadata = {
+                        'comment_id': comment.id,
+                        'post_id': comment.link_id,
+                        'subreddit_id': comment.subreddit_id,
+                        'timestamp': comment.created_utc,
+                        'text': comment.body,
+                        'upvotes': comment.score,
+                        'parent_comment': comment.parent_id # if top-level, then returns the submission ID
+                        }
+
+                    user_comments.update({comment.id: comment_metadata})
+
+            # if a TooManyRequsts error is raised then the API rate limit has been exceeded.
+            # Retry after sleeping. Sleep duration increases by a factor of 2 for 4 retries, and then gives up.
+            except TooManyRequests as e:
+                log_to_file(log_name, f'Error: {e} while fetching user {i + 1}')
+                print(f'Error: {e} while fetching user {i + 1}')
+
+                if n_retries == 0:
+                    sleep_time = 1
+                    print(f'Retry: {n_retries + 1} with {sleep_time}s sleep')
+                    time.sleep(sleep_time)
+                    n_retries += 1
+
+                if n_retries == 1:
+                    sleep_time *= 2
+                    print(f'Retry: {n_retries + 1} with {sleep_time}s sleep')
+                    time.sleep(sleep_time)
+                    n_retries += 1
+
+                if n_retries == 2:
+                    sleep_time *= 2
+                    print(f'Retry: {n_retries + 1} with {sleep_time}s sleep')
+                    time.sleep(sleep_time)
+                    n_retries += 1
+                    sleep_time *= 2
+                    
+                if n_retries == 3:
+                    sleep_time *= 2
+                    print(f'Retry: {n_retries + 1} with {sleep_time}s sleep')
+                    time.sleep(sleep_time)
+                    n_retries += 1
+
+            # catch all other possible exceptions
+            except Exception as e:
+                log_to_file(log_name, f'Unresolved Error: "{e}" while fetching user {i + 1}')
+                print(f'Error: {e} while fetching user {i + 1}')
+                # set to 4 so the try loop stops
+                n_retries = 4
+                
+    return user_comments
