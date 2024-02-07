@@ -1,4 +1,10 @@
-"""A collection of wrappers for PRAW.
+"""A collection of wrappers for PRAW to aid in random sampling of Reddit data.
+
+Includes utilities for sampling all major Reddit entities:
+    - Subreddits
+    - Posts
+    - Comments
+    - Users
 """
 import time
 import praw
@@ -69,13 +75,15 @@ def process_user_ids(id_list):
 
     return [user for user in no_dupes if user not in ("None", "AutoModerator")]
 
+
 def log_to_file(name, message):
     """output logging events to a file
     """
     with open(f'logs/{name}.txt', 'a') as file:
         file.write(message)
 
-def get_user_comments(reddit, user_id, user_i, limit=1000, log_name='log'):
+
+def get_user_comments(reddit, user_id, limit=1000, log_name='log'):
     """Takes a user ID and collects up to 1,000 of that user's most recent comments, with metadata.
     Filters "distinguished" comments, which are used to add a "MOD" decorator (used when engaging
     as a moderator rather than a community member).
@@ -89,20 +97,15 @@ def get_user_comments(reddit, user_id, user_i, limit=1000, log_name='log'):
 
     user_comments = {}
     
-    # for logging
-    comment_j = 1
+    # retry loop
+    # initialize try/except vars
+    n_retries = 0 # retry counter
+    sleep_time = 0 # retry sleep time
+    while n_retries < 4:
+        try:
+            # iterate over the generator to call each comment by the user
+            for comment in user_comment_generator.comments.new(limit=limit):
 
-    # iterate over the generator, calling each item
-    for comment in user_comment_generator.comments.new(limit=limit):
-
-        # initialize try/except vars
-        n_retries = 0 # retry counter
-        sleep_time = 0 # retry sleep time
-
-        # retry loop
-        while n_retries < 4:
-            try:
-                # Main block: fetch comment metadata
                 # don't collect distinguished comments
                 if comment.distinguished != 'moderator':
 
@@ -117,47 +120,43 @@ def get_user_comments(reddit, user_id, user_i, limit=1000, log_name='log'):
                         'parent_comment': comment.parent_id # if top-level, then returns the submission ID
                         }
 
-                    user_comments.update({comment.id: comment_metadata})
-                    print(f'comment dict updated -- user {user_i + 1}, comment {comment_j}')
+            print(f'comment dict updated -- user: {user_id}, comment: {comment}')
+            return user_comments.update({comment.id: comment_metadata})
 
-            # if a TooManyRequsts error is raised then the API rate limit has been exceeded.
-            # Retry after sleeping. Sleep duration increases by a factor of 2 for 4 retries, and then gives up.
-            except TooManyRequests as e:
-                log_to_file(log_name, f'Error: {e} while fetching user {comment_j}')
-                print(f'Error: {e} while fetching user {comment_j}')
+        # if a TooManyRequsts error is raised then the API rate limit has been exceeded.
+        # Retry after sleeping. Sleep duration increases by a factor of 2 for 4 retries.
+        except TooManyRequests as e:
+            log_to_file(log_name, f'Error: {e} while fetching user {user_id}')
+            print(f'Error: {e} while fetching user {user_id}')
 
-                if n_retries == 0:
-                    sleep_time = 1
-                    print(f'Retry: {n_retries + 1} with {sleep_time}s sleep')
-                    time.sleep(sleep_time)
-                    n_retries += 1
+            if n_retries == 0:
+                sleep_time = 1
+                print(f'Retry: {n_retries + 1} with {sleep_time}s sleep')
+                time.sleep(sleep_time)
+                n_retries += 1
 
-                if n_retries == 1:
-                    sleep_time *= 2
-                    print(f'Retry: {n_retries + 1} with {sleep_time}s sleep')
-                    time.sleep(sleep_time)
-                    n_retries += 1
+            if n_retries == 1:
+                sleep_time *= 2
+                print(f'Retry: {n_retries + 1} with {sleep_time}s sleep')
+                time.sleep(sleep_time)
+                n_retries += 1
 
-                if n_retries == 2:
-                    sleep_time *= 2
-                    print(f'Retry: {n_retries + 1} with {sleep_time}s sleep')
-                    time.sleep(sleep_time)
-                    n_retries += 1
-                    sleep_time *= 2
-                    
-                if n_retries == 3:
-                    sleep_time *= 2
-                    print(f'Retry: {n_retries + 1} with {sleep_time}s sleep')
-                    time.sleep(sleep_time)
-                    n_retries += 1
-
-            # catch all other possible exceptions
-            except Exception as e:
-                log_to_file(log_name, f'Unresolved Error: "{e}" while fetching user {comment_j}')
-                print(f'Error: {e} while fetching user {comment_j}')
-                # set to 4 so the try loop stops
-                n_retries = 4
-
-        comment_j += 1
+            if n_retries == 2:
+                sleep_time *= 2
+                print(f'Retry: {n_retries + 1} with {sleep_time}s sleep')
+                time.sleep(sleep_time)
+                n_retries += 1
+                sleep_time *= 2
                 
-    return user_comments
+            if n_retries == 3:
+                sleep_time *= 2
+                print(f'Retry: {n_retries + 1} with {sleep_time}s sleep')
+                time.sleep(sleep_time)
+                n_retries += 1
+
+        # catch all other possible exceptions
+        except Exception as e:
+            log_to_file(log_name, f'Unresolved Error: "{e}" while fetching user {user_id}')
+            print(f'Error: "{e}" while fetching user {user_id}')
+            # set to 4 so the try loop stops
+            n_retries = 4
