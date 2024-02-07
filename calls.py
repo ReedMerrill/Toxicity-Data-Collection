@@ -85,13 +85,10 @@ def log_to_file(name, message):
 
 
 def get_user_comments(reddit, user_id, limit=1000, log_name='log', n_retries=3):
-    """Takes a user ID and collects up to 1,000 of that user's most recent comments, with metadata.
-    Filters "distinguished" comments, which are used to add a "MOD" decorator (used when engaging
-    as a moderator rather than a community member).
+    """Takes a user ID and collects "limit" number (up to 1,000) of that user's most recent comments,
+    with metadata. Filters "distinguished" comments, which are used to add a "MOD" decorator (used when
+    engaging as a moderator rather than a community member).
     """
-
-    # logging
-    log_name = log_name
 
     # get a ListingGenerator for up to the user's 1,000 most recent comments
     user_comment_generator = reddit.redditor(user_id)
@@ -99,8 +96,6 @@ def get_user_comments(reddit, user_id, limit=1000, log_name='log', n_retries=3):
     user_comments = {}
     
     # retry loop
-    # initialize try/except vars
-    sleep_time = 0 # retry sleep time
     for i in range(n_retries):
         try:
             # iterate over the generator to call each comment by the user
@@ -120,29 +115,17 @@ def get_user_comments(reddit, user_id, limit=1000, log_name='log', n_retries=3):
                         'parent_comment': comment.parent_id # if top-level, then returns the submission ID
                         }
 
-            print(f'comment dict updated -- user: {user_id}, comment: {comment}')
-            return user_comments.update({comment.id: comment_metadata})
+                    print(f'comment dict updated -- user: {user_id}, comment: {comment}')
+                    return user_comments.update({comment.id: comment_metadata})
 
         # if a TooManyRequsts error is raised then the API rate limit has been exceeded.
         # Retry after sleeping. Sleep duration increases by a factor of 2 for 4 retries.
         except TooManyRequests as e:
             log_to_file(log_name, f'Error: {e} while fetching user {user_id}')
             print(f'Error: {e} while fetching user {user_id}')
-
-            if i == 1:
-                sleep_time = 1
-                print(f'Retry: {i} with {sleep_time}s sleep')
-                time.sleep(sleep_time)
-
-            if i == 2:
-                sleep_time *= 2
-                print(f'Retry: {i} with {sleep_time}s sleep')
-                time.sleep(sleep_time)
-
-            if i == 3:
-                sleep_time *= 2
-                print(f'Retry: {i} with {sleep_time}s sleep')
-                time.sleep(sleep_time)
+            sleep_time = 1 * (2**i) # each retry waits for longer: 1s, 2s, 4s
+            print(f'Retry: {i + 1} after waiting {sleep_time}s')
+            time.sleep(sleep_time)
 
         # catch all other possible exceptions
         except Exception as e:
