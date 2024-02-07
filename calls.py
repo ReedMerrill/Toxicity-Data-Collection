@@ -84,7 +84,7 @@ def log_to_file(name, message):
         file.write(message)
 
 
-def get_user_comments(reddit, user_id, limit=1000, log_name='log'):
+def get_user_comments(reddit, user_id, limit=1000, log_name='log', n_retries=3):
     """Takes a user ID and collects up to 1,000 of that user's most recent comments, with metadata.
     Filters "distinguished" comments, which are used to add a "MOD" decorator (used when engaging
     as a moderator rather than a community member).
@@ -100,9 +100,8 @@ def get_user_comments(reddit, user_id, limit=1000, log_name='log'):
     
     # retry loop
     # initialize try/except vars
-    n_retries = 0 # retry counter
     sleep_time = 0 # retry sleep time
-    while n_retries < 4:
+    for i in range(n_retries):
         try:
             # iterate over the generator to call each comment by the user
             for comment in user_comment_generator.comments.new(limit=limit):
@@ -130,34 +129,23 @@ def get_user_comments(reddit, user_id, limit=1000, log_name='log'):
             log_to_file(log_name, f'Error: {e} while fetching user {user_id}')
             print(f'Error: {e} while fetching user {user_id}')
 
-            if n_retries == 0:
+            if i == 1:
                 sleep_time = 1
-                print(f'Retry: {n_retries + 1} with {sleep_time}s sleep')
+                print(f'Retry: {i} with {sleep_time}s sleep')
                 time.sleep(sleep_time)
-                n_retries += 1
 
-            if n_retries == 1:
+            if i == 2:
                 sleep_time *= 2
-                print(f'Retry: {n_retries + 1} with {sleep_time}s sleep')
+                print(f'Retry: {i} with {sleep_time}s sleep')
                 time.sleep(sleep_time)
-                n_retries += 1
 
-            if n_retries == 2:
+            if i == 3:
                 sleep_time *= 2
-                print(f'Retry: {n_retries + 1} with {sleep_time}s sleep')
+                print(f'Retry: {i} with {sleep_time}s sleep')
                 time.sleep(sleep_time)
-                n_retries += 1
-                sleep_time *= 2
-                
-            if n_retries == 3:
-                sleep_time *= 2
-                print(f'Retry: {n_retries + 1} with {sleep_time}s sleep')
-                time.sleep(sleep_time)
-                n_retries += 1
 
         # catch all other possible exceptions
         except Exception as e:
             log_to_file(log_name, f'Unresolved Error: "{e}" while fetching user {user_id}')
             print(f'Error: "{e}" while fetching user {user_id}')
-            # set to 4 so the try loop stops
-            n_retries = 4
+            break
