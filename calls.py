@@ -7,6 +7,7 @@ Includes utilities for sampling all major Reddit entities:
     - Comments
     - Users
 """
+
 import time
 import praw
 from prawcore.exceptions import TooManyRequests
@@ -19,6 +20,7 @@ PASSWORD = "CmhtIf!rc-6ZmoJ"
 USER_AGENT = "Reed's politics scraper v1.0.0 (u/bewchacca-lacca)"
 USERNAME = "bewchacca-lacca"
 
+
 def setup_access():
     """Create an instance for API access"""
     instance = praw.Reddit(
@@ -26,29 +28,30 @@ def setup_access():
         client_secret=CLIENT_SECRET,
         password=PASSWORD,
         user_agent=USER_AGENT,
-        username=USERNAME)
+        username=USERNAME,
+    )
     return instance
 
 
 def get_top_posts(reddit, subreddit_name, time_period, n_submissions):
     """Takes the name of a subreddit, a time period, and the desired number of submissions
     and returns a list of the URLs of that subreddit's top posts.
-    
+
     nb this is a separate function because doing so retains a list of the submissions, and parsing
     each level of the user extraction process into its own function avoids messy function outputs
     and is more efficient.
     Returns: list of top post URLs
     """
     # create the generator
-    submission_generator = reddit.subreddit(subreddit_name).top(time_filter=time_period,
-                                                                limit=n_submissions)
+    submission_generator = reddit.subreddit(subreddit_name).top(
+        time_filter=time_period, limit=n_submissions
+    )
     # return generator outputs as a list
     return [submission.id for submission in submission_generator]
-    
+
 
 def get_post_comments_ids(reddit, submission_id):
-    """Takes a submission ID and returns a (flattened) list of all its comments.
-    """
+    """Takes a submission ID and returns a (flattened) list of all its comments."""
     # create a post instance
     comments = reddit.submission(submission_id).comments
     # replace_more() updates the comment forest by resolving instances of MoreComments
@@ -58,8 +61,7 @@ def get_post_comments_ids(reddit, submission_id):
 
 
 def get_comment_author(reddit, comment_id):
-    """Takes a comment ID and return that comment's author.
-    """
+    """Takes a comment ID and return that comment's author."""
     return str(reddit.comment(comment_id).author)
 
 
@@ -78,13 +80,12 @@ def process_user_ids(id_list):
 
 
 def log_to_file(name, message):
-    """output logging events to a file
-    """
-    with open(f'logs/{name}.txt', 'a') as file:
+    """output logging events to a file"""
+    with open(f"logs/{name}.txt", "a") as file:
         file.write(message)
 
 
-def get_user_comments(reddit, user_id, limit=1000, log_name='log', n_retries=3):
+def get_user_comments(reddit, user_id, limit=1000, log_name="log", n_retries=3):
     """Takes a user ID and collects "limit" number (up to 1,000) of that user's most recent comments,
     with metadata. Filters "distinguished" comments, which are used to add a "MOD" decorator (used when
     engaging as a moderator rather than a community member).
@@ -94,41 +95,43 @@ def get_user_comments(reddit, user_id, limit=1000, log_name='log', n_retries=3):
     user_comment_generator = reddit.redditor(user_id)
 
     user_comments = {}
-    
+
     # retry loop
     for i in range(n_retries):
         try:
             # iterate over the generator to call each comment by the user
             for comment in user_comment_generator.comments.new(limit=limit):
-
                 # don't collect distinguished comments
-                if comment.distinguished != 'moderator':
-
+                if comment.distinguished != "moderator":
                     # data to collect
                     comment_metadata = {
-                        'comment_id': comment.id,
-                        'post_id': comment.link_id,
-                        'subreddit_id': comment.subreddit_id,
-                        'timestamp': comment.created_utc,
-                        'text': comment.body,
-                        'upvotes': comment.score,
-                        'parent_comment': comment.parent_id # if top-level, then returns the submission ID
-                        }
+                        "comment_id": comment.id,
+                        "post_id": comment.link_id,
+                        "subreddit_id": comment.subreddit_id,
+                        "timestamp": comment.created_utc,
+                        "text": comment.body,
+                        "upvotes": comment.score,
+                        "parent_comment": comment.parent_id,  # if top-level, then returns the submission ID
+                    }
 
-                    print(f'comment dict updated -- user: {user_id}, comment: {comment}')
+                    print(
+                        f"comment dict updated -- user: {user_id}, comment: {comment}"
+                    )
                     return user_comments.update({comment.id: comment_metadata})
 
         # if a TooManyRequsts error is raised then the API rate limit has been exceeded.
         # Retry after sleeping. Sleep duration increases by a factor of 2 for 4 retries.
         except TooManyRequests as e:
-            log_to_file(log_name, f'Error: {e} while fetching user {user_id}')
-            print(f'Error: {e} while fetching user {user_id}')
-            sleep_time = 1 * (2**i) # each retry waits for longer: 1s, 2s, 4s
-            print(f'Retry: {i + 1} after waiting {sleep_time}s')
+            log_to_file(log_name, f"Error: {e} while fetching user {user_id}")
+            print(f"Error: {e} while fetching user {user_id}")
+            sleep_time = 1 * (2**i)  # each retry waits for longer: 1s, 2s, 4s
+            print(f"Retry: {i + 1} after waiting {sleep_time}s")
             time.sleep(sleep_time)
 
         # catch all other possible exceptions
         except Exception as e:
-            log_to_file(log_name, f'Unresolved Error: "{e}" while fetching user {user_id}')
+            log_to_file(
+                log_name, f'Unresolved Error: "{e}" while fetching user {user_id}'
+            )
             print(f'Error: "{e}" while fetching user {user_id}')
             break
