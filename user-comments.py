@@ -46,8 +46,8 @@ def main():
         estimate = utils.estimate_time_remaining(
             task_index=i, total_tasks=len(users_list), start_time=start_time
         )
-        utils.log_to_file(log_name, f"Finished collecing data for User {i + 1}")
-        utils.log_to_file(log_name, f"Time remaining: ~{estimate} hours")
+        utils.log_to_file(log_name, f"Finished collecing data for User {i + 1}\n")
+        utils.log_to_file(log_name, f"Time remaining: ~{estimate} hours\n")
     # output the data to JSON
     with open(OUTPUT_PATH + "user-comments.json", "w") as file:
         json.dump(user_comment_data, file, indent=4)
