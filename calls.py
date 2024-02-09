@@ -11,6 +11,7 @@ Includes utilities for sampling all major Reddit entities:
 import time
 import praw
 from prawcore.exceptions import TooManyRequests
+import utils
 
 
 # credentials
@@ -65,26 +66,6 @@ def get_comment_author(reddit, comment_id):
     return str(reddit.comment(comment_id).author)
 
 
-def process_user_ids(id_list):
-    """Clean the user IDs obtained during runs of sample.py.
-
-    Inputs: list of user IDs
-    Returns: Cleaned list of user IDs
-        - removes duplicates
-        - removes AutoModerator
-        - removes None values
-    """
-    no_dupes = list(set(id_list))
-
-    return [user for user in no_dupes if user not in ("None", "AutoModerator")]
-
-
-def log_to_file(name, message):
-    """output logging events to a file"""
-    with open(f"logs/{name}.txt", "a") as file:
-        file.write(message)
-
-
 def get_user_comments(reddit, user_id, limit=1000, log_name="log", n_retries=3):
     """Takes a user ID and collects "limit" number (up to 1,000) of that user's most recent comments,
     with metadata. Filters "distinguished" comments, which are used to add a "MOD" decorator (used when
@@ -103,6 +84,9 @@ def get_user_comments(reddit, user_id, limit=1000, log_name="log", n_retries=3):
             for comment in user_comment_generator.comments.new(limit=limit):
                 # don't collect distinguished comments
                 if comment.distinguished != "moderator":
+                    # get another comment to account for skipping the mod commen
+                    if limit < 1000:
+                        limit += 1
                     # data to collect
                     comment_metadata = {
                         "comment_id": comment.id,
@@ -117,21 +101,26 @@ def get_user_comments(reddit, user_id, limit=1000, log_name="log", n_retries=3):
                     print(
                         f"comment dict updated -- user: {user_id}, comment: {comment}"
                     )
-                    return user_comments.update({comment.id: comment_metadata})
+                    user_comments.update({comment.id: comment_metadata})
+
+            # exit retry loop after all calls to user_comment_generator
+            break
 
         # if a TooManyRequsts error is raised then the API rate limit has been exceeded.
         # Retry after sleeping. Sleep duration increases by a factor of 2 for 4 retries.
         except TooManyRequests as e:
-            log_to_file(log_name, f"Error: {e} while fetching user {user_id}")
+            utils.log_to_file(log_name, f"Error: {e} while fetching user {user_id}\n")
             print(f"Error: {e} while fetching user {user_id}")
             sleep_time = 1 * (2**i)  # each retry waits for longer: 1s, 2s, 4s
-            print(f"Retry: {i + 1} after waiting {sleep_time}s")
+            print(f"Making {i + 1}st retry after waiting {sleep_time}s")
             time.sleep(sleep_time)
 
-        # catch all other possible exceptions
+        # catch all other possible exceptions and break retry loop
         except Exception as e:
-            log_to_file(
-                log_name, f'Unresolved Error: "{e}" while fetching user {user_id}'
+            utils.log_to_file(
+                log_name, f'Unresolved Error: "{e}" while fetching user {user_id}\n'
             )
             print(f'Error: "{e}" while fetching user {user_id}')
             break
+
+    return user_comments
