@@ -1,2 +1,6 @@
 __pycache__/*
 logs/*
+testing/tmp.py
+data/test.csv
+testing/__pycache__/*
+data/comment-extraction-test.json
