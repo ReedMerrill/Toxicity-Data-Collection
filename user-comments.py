@@ -13,5 +13,8 @@ reddit = calls.setup_async_access()
 user_ids = calls.process_user_ids(reddit, users_dict['users'])
 
 async def main():
+    """"""
+
+    return None
     
 asyncio.run(main()) 
