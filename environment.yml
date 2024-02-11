@@ -1,4 +1,4 @@
-name: reddit-scraper
+name: reddit-api
 channels:
   - defaults
 dependencies:
