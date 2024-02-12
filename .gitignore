@@ -5,3 +5,4 @@ data/test.csv
 testing/__pycache__/*
 data/comment-extraction-test.json
 data/user-comments.json
+data/user-comments-pretty.json
