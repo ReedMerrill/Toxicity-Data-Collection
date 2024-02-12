@@ -1,6 +1,5 @@
 """
 A collection of wrappers for PRAW to aid in random sampling of Reddit data.
-
 Includes utilities for sampling all major Reddit entities:
     - Subreddits
     - Posts
