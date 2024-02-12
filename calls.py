@@ -109,7 +109,9 @@ def get_user_comments(reddit, user_id, limit=1000, log_name="log", n_retries=3):
         # if a TooManyRequsts error is raised then the API rate limit has been exceeded.
         # Retry after sleeping. Sleep duration increases by a factor of 2 for 4 retries.
         except TooManyRequests as e:
-            utils.log_to_file(log_name, f"Error: {e} while fetching user {user_id}\n")
+            utils.log_to_file(
+                log_name, f"Error: {e} while fetching one of {user_id}'s comments\n"
+            )
             print(f"Error: {e} while fetching user {user_id}")
             sleep_time = 1 * (2**i)  # each retry waits for longer: 1s, 2s, 4s
             print(f"Making {i + 1}st retry after waiting {sleep_time}s")
@@ -118,7 +120,8 @@ def get_user_comments(reddit, user_id, limit=1000, log_name="log", n_retries=3):
         # catch all other possible exceptions and break retry loop
         except Exception as e:
             utils.log_to_file(
-                log_name, f'Unresolved Error: "{e}" while fetching user {user_id}\n'
+                log_name,
+                f'Unresolved Error: "{e}" while fetching one of {user_id}\'s comments\n',
             )
             print(f'Error: "{e}" while fetching user {user_id}')
             break

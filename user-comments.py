@@ -1,4 +1,4 @@
-"""Takes '/output/user-sample.csv' as input and collects each user's recent comments.
+"""Takes 'user-sample.csv' as input and collects each user's recent comments.
 """
 
 import time
@@ -34,7 +34,7 @@ def main():
     for i, user in enumerate(users_list):
         # initialize dict to store a single user's comments
         user_comments = {}
-        # call for comment metadata from API
+        # make comment metadata dict using reddit API
         comments = calls.get_user_comments(
             reddit=reddit, user_id=user, limit=COMMENT_LIMIT, log_name=log_name
         )
