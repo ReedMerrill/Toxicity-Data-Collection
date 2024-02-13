@@ -7,6 +7,9 @@ PASSWORD = "CmhtIf!rc-6ZmoJ"
 USER_AGENT = "Reed's politics scraper v1.0.0 (u/bewchacca-lacca)"
 USERNAME = "bewchacca-lacca"
 
+MY_REDDITOR_ID = "if67f2kd"
+
+
 def create_instance():
     """Create an instance for API access"""
     instance = praw.Reddit(
@@ -14,9 +17,10 @@ def create_instance():
         client_secret=CLIENT_SECRET,
         password=PASSWORD,
         user_agent=USER_AGENT,
-        username=USERNAME
+        username=USERNAME,
     )
     return instance
+
 
 reddit = create_instance()
 
@@ -32,14 +36,17 @@ print(subreddit.description)
 my_reddit = reddit.redditor("bewchacca-lacca")
 
 print("+++++++++++++++++++++++++++++++++++")
-print(my_reddit.link_karma) # you have to print something to trigger a request and make the object non-lazy
+print(
+    my_reddit.link_karma
+)  # you have to print something to trigger a request and make the object non-lazy
 pprint.pprint(vars(my_reddit))
 
+
 # get a user subreddit
-user_subreddit = reddit.subreddit('u_bewchacca-lacca')
+user_subreddit = reddit.subreddit("u_bewchacca-lacca")
 
 print("+++++++++++++++++++++++++++++++++++")
-print(user_subreddit.title) # the title field is empty
+print(user_subreddit.title)  # the title field is empty
 pprint.pprint(vars(user_subreddit))
 
 # get a redditor's comments and submissions?
@@ -47,7 +54,7 @@ user_comments = reddit.redditor("bewchacca-lacca").comments.new(limit=None)
 user_comments_list = list(user_comments)
 
 print("+++++++++++++++++++++++++++++++++++")
-print(user_comments_list[10]) # returns comment ID
+print(user_comments_list[10])  # returns comment ID
 print(len(user_comments_list))
 
 print("+++++++++++++++++++++++++++++++++++")
@@ -65,5 +72,5 @@ for sub in random_subs:
 print("")
 subscriber_counts = [reddit.random_subreddit().subscribers for _ in range(100)]
 avg_subscribers = sum(subscriber_counts) / 100
-print(f'Average Subscribers: {avg_subscribers}')
+print(f"Average Subscribers: {avg_subscribers}")
 # why does this take forever to calculate xD
