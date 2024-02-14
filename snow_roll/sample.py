@@ -8,6 +8,8 @@ Includes utilities for sampling all major Reddit entities:
 """
 
 import time
+import os
+from datetime import datetime
 import praw
 import pandas as pd
 from prawcore.exceptions import TooManyRequests
@@ -130,9 +132,16 @@ def get_user_comments(reddit, user_id, limit=1000, log_name="log", n_retries=3):
 
 
 def get_user_metadata(
-    reddit, user_id, out_file="user-metadata.csv", log_name="log", n_retries=3
+    reddit,
+    user_id,
+    out_file_path=f"user-metadata_{datetime().now()}.csv",
+    log_name="log",
+    n_retries=3,
 ):
+    # TODO
     """ """
+    # column names for csv output
+    col_names = ["id", "comment_karma", "total_karma", "created_utc"]
     # get a ListingGenerator for up to the user's 1,000 most recent comments
     user = reddit.redditor(user_id)
 
@@ -142,13 +151,12 @@ def get_user_metadata(
             # iterate over the generator to call each comment by the user
             # get another comment to account for skipping the mod commen
             # data to collect
-            metadata = {
-                "user_id": user.id,
-                "comment_karma": user.comment_karma,
-                "link_karma": user.link_karma,
-                "total_karma": user.total_karma,
-                "create_utc": user.created_utc,
-            }
+            metadata_list = [
+                user.id,
+                user.comment_karma,
+                user.total_karma,
+                user.created_utc,
+            ]
 
             print(f'Finished collecting metadata for user "{user}"')
             # exit retry loop after all calls to user
@@ -156,9 +164,15 @@ def get_user_metadata(
             # TODO: need some stuff to initialize the column headings, and fix
             # metdata dict so its just a list corresponding to header positions
             # stream data to CSV file
-            data_row = pd.DataFrame(metadata)
-            with open(out_file, "a") as file:
-                data_row.to_csv(file, index=False, header=False)
+            data_row = pd.DataFrame([metadata_list], columns=col_names)
+            # check if the file exists
+            file_exists = True if os.path.exists(out_file_path) else False
+            if file_exists is True:
+                with open(out_file_path, "w") as file:
+                    data_row.to_csv(file, index=False, header=True)
+            else:
+                with open(out_file_path, "a") as file:
+                    data_row.to_csv(file, index=False, header=True)
 
         # if a TooManyRequsts error is raised then the API rate limit has been exceeded.
         # Retry after sleeping. Sleep duration increases by a factor of 2 for 4 retries.
