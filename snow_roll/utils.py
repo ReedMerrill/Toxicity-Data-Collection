@@ -17,9 +17,9 @@ def process_user_ids(id_list):
     return [user for user in no_dupes if user not in ("None", "AutoModerator")]
 
 
-def log_to_file(name, message):
+def log_to_file(path, message):
     """output logging events to a file"""
-    with open(f"logs/{name}.txt", "a") as file:
+    with open(f"{path}", "a") as file:
         file.write(message)
 
 

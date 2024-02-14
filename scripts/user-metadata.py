@@ -6,15 +6,14 @@ from datetime import datetime
 import pandas as pd
 from snow_roll import sample, utils
 
-PROJECT_PATH = "/home/reed/Projects/learned-toxicity-reddit/reddit-api/"
-INPUT_PATH = f"{PROJECT_PATH}/data/user-sample.csv"
-OUTPUT_PATH = f"{PROJECT_PATH}data/user-metadata.csv"
-log_path = f"{PROJECT_PATH}/logs/user-metadata_{datetime.now()}"
+PROJECT_PATH = "/home/reed/Projects/learned-toxicity-reddit/reddit-api"
+INPUT_PATH = f"{PROJECT_PATH}/data/sample/user-sample.csv"
+OUTPUT_PATH = f"{PROJECT_PATH}/data/sample/user-metadata.csv"
+log_path = f"{PROJECT_PATH}/logs/user-metadata_{datetime.now()}.txt"
 
 # read users list and remove duplicates and moderators
 users = pd.read_csv(INPUT_PATH)
 users_list = utils.process_user_ids(list(users["users"]))
-users_list = users_list[0:4]
 
 
 def main():
