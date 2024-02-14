@@ -5,8 +5,7 @@ import time
 from datetime import datetime
 import json
 import pandas as pd
-import calls
-import utils
+from snow_roll import sample, utils
 
 PROJECT_PATH = "/home/reed/Projects/learned-toxicity-reddit/reddit-api/"
 INPUT_PATH = f"{PROJECT_PATH}/data/user-sample.csv"
@@ -23,7 +22,7 @@ def main():
     log_name = f"user-comment-extraction_{datetime.now()}"
     utils.log_to_file(log_name, f"{datetime.now()} - Begin Fetching comments...\n")
     # setup a PRAW reddit instance
-    reddit = calls.setup_access()
+    reddit = sample.setup_access()
     print("API Authentication Successful")
     # read in users list
     users = pd.read_csv(INPUT_PATH)
@@ -35,7 +34,7 @@ def main():
         # initialize dict to store a single user's comments
         user_comments = {}
         # make comment metadata dict using reddit API
-        comments = calls.get_user_comments(
+        comments = sample.get_user_comments(
             reddit=reddit, user_id=user, limit=COMMENT_LIMIT, log_name=log_name
         )
         # add user comments to, mapping them to the username
