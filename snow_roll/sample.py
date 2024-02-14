@@ -134,14 +134,14 @@ def get_user_comments(reddit, user_id, limit=1000, log_name="log", n_retries=3):
 def get_user_metadata(
     reddit,
     user_id,
-    out_file_path=f"user-metadata_{datetime().now()}.csv",
-    log_name="log",
+    out_file_path,
+    log_path,
     n_retries=3,
 ):
     # TODO
     """ """
     # column names for csv output
-    col_names = ["id", "comment_karma", "total_karma", "created_utc"]
+    col_names = ["display_name", "id", "comment_karma", "total_karma", "created_utc"]
     # get a ListingGenerator for up to the user's 1,000 most recent comments
     user = reddit.redditor(user_id)
 
@@ -152,6 +152,7 @@ def get_user_metadata(
             # get another comment to account for skipping the mod commen
             # data to collect
             metadata_list = [
+                user_id,
                 user.id,
                 user.comment_karma,
                 user.total_karma,
@@ -159,26 +160,24 @@ def get_user_metadata(
             ]
 
             print(f'Finished collecting metadata for user "{user}"')
-            # exit retry loop after all calls to user
-
-            # TODO: need some stuff to initialize the column headings, and fix
-            # metdata dict so its just a list corresponding to header positions
             # stream data to CSV file
             data_row = pd.DataFrame([metadata_list], columns=col_names)
             # check if the file exists
             file_exists = True if os.path.exists(out_file_path) else False
-            if file_exists is True:
+            if file_exists is False:
                 with open(out_file_path, "w") as file:
                     data_row.to_csv(file, index=False, header=True)
             else:
                 with open(out_file_path, "a") as file:
-                    data_row.to_csv(file, index=False, header=True)
+                    data_row.to_csv(file, index=False, header=False)
+            # exit retry loop
+            break
 
         # if a TooManyRequsts error is raised then the API rate limit has been exceeded.
         # Retry after sleeping. Sleep duration increases by a factor of 2 for 4 retries.
         except TooManyRequests as e:
             utils.log_to_file(
-                log_name, f'Error: {e} while fetching metadata for "{user_id}\n"'
+                log_path, f'Error: {e} while fetching metadata for "{user_id}\n"'
             )
             print(f'Error: {e} while fetching metadata for "{user_id}"')
             sleep_time = 1 * (2**i)  # each retry waits for longer: 1s, 2s, 4s
@@ -188,7 +187,7 @@ def get_user_metadata(
         # catch all other possible exceptions and break retry loop
         except Exception as e:
             utils.log_to_file(
-                log_name,
+                log_path,
                 f'Unresolved Error: "{e}" while fetching "{user_id}"\'s metadata\n',
             )
             print(f'Error: "{e}" while fetching user {user_id}')
