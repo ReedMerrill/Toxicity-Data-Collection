@@ -3,14 +3,14 @@
 
 import time
 from datetime import datetime
-import json
 import pandas as pd
 from snow_roll import sample, utils
 
 PROJECT_PATH = "/home/reed/Projects/learned-toxicity-reddit/reddit-api/"
-INPUT_PATH = f"{PROJECT_PATH}/data/user-sample.csv"
-OUTPUT_PATH = f"{PROJECT_PATH}data/"
+INPUT_PATH = f"{PROJECT_PATH}data/user-sample.csv"
+OUTPUT_PATH = f"{PROJECT_PATH}data/comments/user-comments.csv"
 COMMENT_LIMIT = 1000
+LOG_PATH = f"{PROJECT_PATH}/logs/user-comment-extraction_{datetime.now()}.txt"
 
 
 def main():
@@ -19,8 +19,7 @@ def main():
     """
     # initialize log file
     start_time = time.time()
-    log_name = f"user-comment-extraction_{datetime.now()}"
-    utils.log_to_file(log_name, f"{datetime.now()} - Begin Fetching comments...\n")
+    utils.log_to_file(LOG_PATH, f"{datetime.now()} - Begin Fetching comments...\n")
     # setup a PRAW reddit instance
     reddit = sample.setup_access()
     print("API Authentication Successful")
@@ -29,30 +28,25 @@ def main():
     # remove duplicate users and moderators
     users_list = utils.process_user_ids(list(users["users"]))
     # iterate over list of user, extracting each user's comment metadata
-    user_comment_data = {}
     for i, user in enumerate(users_list):
         # initialize dict to store a single user's comments
-        user_comments = {}
         # make comment metadata dict using reddit API
-        comments = sample.get_user_comments(
-            reddit=reddit, user_id=user, limit=COMMENT_LIMIT, log_name=log_name
+        sample.get_user_comments(
+            reddit=reddit,
+            user_id=user,
+            limit=COMMENT_LIMIT,
+            out_file_path=OUTPUT_PATH,
+            log_path=LOG_PATH,
         )
-        # add user comments to, mapping them to the username
-        user_comments.update({user: comments})
-        # add user comments dictionary to the dict of all user's comments
-        user_comment_data.update(user_comments)
-        # log finish time estimate
         estimate = utils.estimate_time_remaining(
             task_index=i, total_tasks=len(users_list), start_time=start_time
         )
-        utils.log_to_file(log_name, f"Finished collecing data for User {i + 1}\n")
-        utils.log_to_file(log_name, f"Time remaining: ~{estimate} hours\n")
-    # output the data to JSON
-    with open(OUTPUT_PATH + "user-comments.json", "w") as file:
-        json.dump(user_comment_data, file, indent=4)
+        print(f"Finished collecing data for User {i + 1}")
+        print(f"Time remaining: ~{estimate} hours")
     # final logging
     total_time_hours = (time.time() - start_time) / 3600
-    utils.log_to_file(log_name, f"Total Time Elapsed: {total_time_hours}\n")
+    print(f"Total Time Elapsed: {total_time_hours}")
+    utils.log_to_file(LOG_PATH, f"Total Time Elapsed: {total_time_hours}")
 
 
 if __name__ == "__main__":

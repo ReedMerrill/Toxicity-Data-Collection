@@ -9,7 +9,6 @@ Includes utilities for sampling all major Reddit entities:
 
 import time
 import os
-from datetime import datetime
 import praw
 import pandas as pd
 from prawcore.exceptions import TooManyRequests
@@ -68,16 +67,35 @@ def get_comment_author(reddit, comment_id):
     return str(reddit.comment(comment_id).author)
 
 
-def get_user_comments(reddit, user_id, limit=1000, log_name="log", n_retries=3):
-    """Takes a user ID and collects "limit" number (up to 1,000) of that user's most recent comments,
-    with metadata. Filters "distinguished" comments, which are used to add a "MOD" decorator (used when
-    engaging as a moderator rather than a community member).
+def get_user_comments(
+    reddit,
+    user_id,
+    out_file_path,
+    log_path,
+    n_retries=3,
+    limit=1000,
+):
+    """Takes a user ID and collects "limit" number (up to 1,000) of that
+    user's most recent comments, with metadata. Filters "distinguished"
+    comments, which are used to add a "MOD" decorator (used when engaging as a
+    moderator rather than a community member). Writes data to disk one row at
+    a time as a CSV.
     """
 
     # get a ListingGenerator for up to the user's 1,000 most recent comments
     user_comment_generator = reddit.redditor(user_id)
 
-    user_comments = {}
+    col_names = [
+        "comment_id",
+        "username",
+        "user_id",
+        "post_id",
+        "subreddit_id",
+        "timestamp",
+        "text",
+        "upvotes",
+        "parent_comment",  # if top-level, then returns the submission ID
+    ]
 
     # retry loop
     for i in range(n_retries):
@@ -86,33 +104,40 @@ def get_user_comments(reddit, user_id, limit=1000, log_name="log", n_retries=3):
             for comment in user_comment_generator.comments.new(limit=limit):
                 # don't collect distinguished comments
                 if comment.distinguished != "moderator":
-                    # get another comment to account for skipping the mod commen
+                    # data to collect
+                    comment_metadata = [
+                        comment.id,
+                        user_id,
+                        comment.author,
+                        comment.link_id,
+                        comment.subreddit_id,
+                        comment.created_utc,
+                        comment.body,
+                        comment.score,
+                        comment.parent_id,
+                    ]
+
+                    data_row = pd.DataFrame([comment_metadata], columns=col_names)
+                    # check if the file exists
+                    file_exists = True if os.path.exists(out_file_path) else False
+                    if file_exists is False:
+                        with open(out_file_path, "w") as file:
+                            data_row.to_csv(file, index=False, header=True)
+                    else:
+                        with open(out_file_path, "a") as file:
+                            data_row.to_csv(file, index=False, header=False)
+                    # exit retry loop
+                    break
+                else:
+                    # get another comment to account for skipping the mod comment
                     if limit < 1000:
                         limit += 1
-                    # data to collect
-                    comment_metadata = {
-                        "comment_id": comment.id,
-                        "post_id": comment.link_id,
-                        "subreddit_id": comment.subreddit_id,
-                        "timestamp": comment.created_utc,
-                        "text": comment.body,
-                        "upvotes": comment.score,
-                        "parent_comment": comment.parent_id,  # if top-level, then returns the submission ID
-                    }
-
-                    print(
-                        f"comment dict updated -- user: {user_id}, comment: {comment}"
-                    )
-                    user_comments.update({comment.id: comment_metadata})
-
-            # exit retry loop after all calls to user_comment_generator
-            break
 
         # if a TooManyRequsts error is raised then the API rate limit has been exceeded.
-        # Retry after sleeping. Sleep duration increases by a factor of 2 for 4 retries.
+        # Retry after sleeping. Sleep duration increases by a factor of 2 for 3 retries.
         except TooManyRequests as e:
             utils.log_to_file(
-                log_name, f"Error: {e} while fetching one of {user_id}'s comments\n"
+                log_path, f"Error: {e} while fetching one of {user_id}'s comments\n"
             )
             print(f"Error: {e} while fetching user {user_id}")
             sleep_time = 1 * (2**i)  # each retry waits for longer: 1s, 2s, 4s
@@ -122,13 +147,11 @@ def get_user_comments(reddit, user_id, limit=1000, log_name="log", n_retries=3):
         # catch all other possible exceptions and break retry loop
         except Exception as e:
             utils.log_to_file(
-                log_name,
+                log_path,
                 f'Unresolved Error: "{e}" while fetching one of {user_id}\'s comments\n',
             )
             print(f'Error: "{e}" while fetching user {user_id}')
             break
-
-    return user_comments
 
 
 def get_user_metadata(
@@ -138,8 +161,9 @@ def get_user_metadata(
     log_path,
     n_retries=3,
 ):
-    # TODO
-    """ """
+    """Iterates through a list of usernames and returns rows of data matching
+    the metadata of each user.
+    """
     # column names for csv output
     col_names = ["display_name", "id", "comment_karma", "total_karma", "created_utc"]
     # get a ListingGenerator for up to the user's 1,000 most recent comments
