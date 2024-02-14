@@ -2,6 +2,6 @@ __pycache__/*
 logs/*
 testing/tmp.py
 data/test.csv
-scripts/__pycache__/*
+snow_roll/__pycache__/*
 data/comments/user-comments.json
 data/comments/user-comments-pretty.json
