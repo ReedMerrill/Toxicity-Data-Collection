@@ -88,13 +88,12 @@ def get_user_comments(
     col_names = [
         "comment_id",
         "username",
-        "user_id",
         "post_id",
         "subreddit_id",
         "timestamp",
-        "text",
-        "upvotes",
         "parent_comment",  # if top-level, then returns the submission ID
+        "upvotes",
+        "text",
     ]
 
     # retry loop
@@ -108,13 +107,12 @@ def get_user_comments(
                     comment_metadata = [
                         comment.id,
                         user_id,
-                        comment.author,
                         comment.link_id,
                         comment.subreddit_id,
                         comment.created_utc,
-                        comment.body,
-                        comment.score,
                         comment.parent_id,
+                        comment.score,
+                        comment.body,
                     ]
 
                     data_row = pd.DataFrame([comment_metadata], columns=col_names)
@@ -126,12 +124,12 @@ def get_user_comments(
                     else:
                         with open(out_file_path, "a") as file:
                             data_row.to_csv(file, index=False, header=False)
-                    # exit retry loop
-                    break
+                # get another comment to account for skipping the mod comment
                 else:
-                    # get another comment to account for skipping the mod comment
                     if limit < 1000:
                         limit += 1
+            # exit retry loop
+            break
 
         # if a TooManyRequsts error is raised then the API rate limit has been exceeded.
         # Retry after sleeping. Sleep duration increases by a factor of 2 for 3 retries.
