@@ -7,8 +7,8 @@ import pandas as pd
 from snow_roll import sample, utils
 
 PROJECT_PATH = "/home/reed/Projects/learned-toxicity-reddit/reddit-api/"
-INPUT_PATH = f"{PROJECT_PATH}data/user-sample.csv"
-OUTPUT_PATH = f"{PROJECT_PATH}data/comments/user-comments.csv"
+INPUT_PATH = f"{PROJECT_PATH}data/sample/user-sample-subset-20pct.csv"
+OUTPUT_PATH = f"{PROJECT_PATH}data/comments/20pct-users-subset_comments.csv"
 COMMENT_LIMIT = 1000
 LOG_PATH = f"{PROJECT_PATH}/logs/user-comment-extraction_{datetime.now()}.txt"
 
@@ -23,10 +23,9 @@ def main():
     # setup a PRAW reddit instance
     reddit = sample.setup_access()
     print("API Authentication Successful")
-    # read in users list
+    # read in users subset
     users = pd.read_csv(INPUT_PATH)
-    # remove duplicate users and moderators
-    users_list = utils.process_user_ids(list(users["users"]))
+    users_list = list(users["users"])
     # iterate over list of user, extracting each user's comment metadata
     for i, user in enumerate(users_list):
         # initialize dict to store a single user's comments
