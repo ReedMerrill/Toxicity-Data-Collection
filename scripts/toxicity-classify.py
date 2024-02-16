@@ -38,7 +38,7 @@ def query_perspective(comments, log_path):
         for j in range(10):
             try:
                 response = client.comments().analyze(body=analyze_request).execute()
-                # dig down into that crazy dictionary!
+                # dig down into this crazy dictionary!
                 score = response["attributeScores"]["TOXICITY"]["spanScores"][0][
                     "score"
                 ]["value"]
@@ -60,7 +60,7 @@ def query_perspective(comments, log_path):
                 utils.log_to_file(
                     log_path, f"Error: {e} while fetching toxicity of comment {j}\n"
                 )
-                sleep_time = 1 * (2**i)  # each retry waits for longer: 1s, 2s, 4s ...
+                sleep_time = 1 * (2**j)  # each retry waits for longer: 1s, 2s, 4s ...
                 time.sleep(sleep_time)
                 print(f"Waiting {sleep_time} seconds before retrying")
 
