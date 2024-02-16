@@ -12,10 +12,11 @@ from transformers import (
     AutoModelForSequenceClassification,
     TextClassificationPipeline,
 )
+import utils
 
 PROJECT_PATH = "/home/reed/Projects/learned-toxicity-reddit/reddit-api/"
 INPUT_PATH = f"{PROJECT_PATH}data/comments/20pct-users-subset_comments.csv"
-OUTPUT_PATH = f"{PROJECT_PATH}data/comments/classified-comments.json"
+OUTPUT_PATH = f"{PROJECT_PATH}data/comments/namecalling-classified-comments.json"
 
 model_name = "civility-lab/roberta-base-namecalling"
 classifier = TextClassificationPipeline(
@@ -27,12 +28,14 @@ classifier = TextClassificationPipeline(
 def main():
 
     data = pd.read_csv(INPUT_PATH)
-    text_list = list(data["text"])
+    comments_list = list(data["text"])
+
+    clean_list = utils.clean_comments(comments_list)
 
     start = time.time()
 
     # classifier is a ListingGenerator, so it does the iteration automatically
-    out = classifier(text_list, truncation=True, max_length=512)
+    out = classifier(clean_list, truncation=True, max_length=512)
     output_dict = {}
     output_dict["label"] = [item["label"] for item in out]  # ignore linting
 

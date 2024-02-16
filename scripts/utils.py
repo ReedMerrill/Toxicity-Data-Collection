@@ -1,6 +1,7 @@
 """Utilities for logging and data processing."""
 
 import time
+import re
 
 
 def process_user_ids(id_list):
