@@ -2,6 +2,7 @@
 
 import time
 import re
+import emojis
 
 
 def process_user_ids(id_list):
@@ -46,5 +47,10 @@ def clean_comments(comment_list):
     return clean_list
 
 
-def remove_emojis():
+def remove_emojis(comment_list):
     """Removes emojis from a list of strings."""
+
+    decoded = [emojis.decode(comment) for comment in comment_list]
+    clean_list = [re.sub(r":\w+:", "", string) for string in decoded]
+
+    return clean_list
