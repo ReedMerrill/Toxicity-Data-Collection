@@ -4,7 +4,8 @@
 import time
 from datetime import datetime
 import pandas as pd
-from snow_roll import sample, utils
+import sample
+import utils
 
 PROJECT_PATH = "/home/reed/Projects/learned-toxicity-reddit/reddit-api/"
 INPUT_PATH = f"{PROJECT_PATH}data/sample/user-sample-subset-20pct.csv"
