@@ -1,8 +1,9 @@
 __pycache__/*
+scripts/__pycache__/*
+snow_roll/__pycache__/*
 logs/*
 testing/tmp.py
 data/test.csv
-snow_roll/__pycache__/*
 data/comments/comments.json
 data/comments/comments-pretty.json
 data/comments/20pct-users-subset_comments.csv
