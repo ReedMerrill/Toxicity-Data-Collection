@@ -60,7 +60,7 @@ def query_perspective(comments, log_path):
                 utils.log_to_file(
                     log_path, f"Error: {e} while fetching toxicity of comment {j}\n"
                 )
-                sleep_time = 1 * (2**j)  # each retry waits for longer: 1s, 2s, 4s ...
+                sleep_time = 2**j  # each retry waits for longer: 1s, 2s, 4s ...
                 time.sleep(sleep_time)
                 print(f"Waiting {sleep_time} seconds before retrying")
 
@@ -70,8 +70,12 @@ def query_perspective(comments, log_path):
 def main():
 
     data = pd.read_csv(INPUT_PATH)
-    comments_list = list(data["text"])
-    toxicity_labels = query_perspective(comments=comments_list, log_path=LOG_PATH)
+    comments_list_raw = list(data["text"])
+    comments_list_strings = utils.clean_comments(comments_list_raw)
+    comments_list_no_emoji = utils.clean_comments(comments_list_strings)
+    toxicity_labels = query_perspective(
+        comments=comments_list_no_emoji, log_path=LOG_PATH
+    )
     out = pd.DataFrame({"toxic": toxicity_labels})
     with open(OUTPUT_PATH, "w") as file:
         out.to_csv(file, header=True, index=False)
