@@ -71,8 +71,7 @@ def main():
 
     data = pd.read_csv(INPUT_PATH)
     comments_list_raw = list(data["text"])
-    comments_list_strings = utils.clean_comments(comments_list_raw)
-    comments_list_no_emoji = utils.clean_comments(comments_list_strings)
+    comments_list_no_emoji = utils.clean_comments(comments_list_raw)
     toxicity_labels = query_perspective(
         comments=comments_list_no_emoji, log_path=LOG_PATH
     )

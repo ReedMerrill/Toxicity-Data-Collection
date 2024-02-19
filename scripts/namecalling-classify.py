@@ -34,7 +34,7 @@ def main():
 
     start = time.time()
 
-    # classifier is a ListingGenerator, so it does the iteration automatically
+    # NOTE: classifier iterates lazily
     out = classifier(clean_list, truncation=True, max_length=512)
     output_dict = {}
     output_dict["label"] = [item["label"] for item in out]  # ignore linting
