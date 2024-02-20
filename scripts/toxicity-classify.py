@@ -66,7 +66,7 @@ def main():
                 data_row.to_csv(file, index=False, header=False)
 
         # logging
-        print(f"Finished labeling batch {i + 1}")
+        print(f"Comments labelled: {(i + 1 * 64)}")
         estimate = utils.estimate_time_remaining(i, len(comment_batch_list), start)
         print(f"Time remaining: ~{estimate} hours")
 
