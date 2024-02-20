@@ -38,19 +38,19 @@ def estimate_time_remaining(task_index, total_tasks, start_time):
     return estimate
 
 
-def clean_comments(comment_list):
+def clean_comment(comment):
     """Coerce all data to string and remove URLs"""
 
-    strings_list = [str(comment) for comment in comment_list]
-    clean_list = [re.sub(r"\S*https?:\S*", "", string) for string in strings_list]
+    string = str(comment)
+    clean_comment = re.sub(r"\S*https?:\S*", "", string)
 
-    return clean_list
+    return clean_comment
 
 
-def remove_emojis(comment_list):
+def remove_emojis(comment):
     """Removes emojis from a list of strings."""
 
-    decoded = [emojis.decode(comment) for comment in comment_list]
-    clean_list = [re.sub(r":\w+:", "", string) for string in decoded]
+    decoded = emojis.decode(comment)
+    clean = re.sub(r":\w+:", "", decoded)
 
-    return clean_list
+    return clean
