@@ -8,7 +8,7 @@ OUTPUT_PATH = f"{PROJECT_PATH}data/sample/user-sample-subset-20pct.csv"
 
 import pandas as pd
 import random
-from snow_roll import utils
+import utils
 
 users_raw = pd.read_csv(INPUT_PATH)
 users = utils.process_user_ids(users_raw["users"])

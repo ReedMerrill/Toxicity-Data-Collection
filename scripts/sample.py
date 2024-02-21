@@ -125,9 +125,6 @@ def get_user_comments(
                         with open(out_file_path, "a") as file:
                             data_row.to_csv(file, index=False, header=False)
                 # get another comment to account for skipping the mod comment
-                else:
-                    if limit < 1000:
-                        limit += 1
             # exit retry loop
             break
 
