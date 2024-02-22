@@ -37,7 +37,7 @@ def batch_df(comments_df, batch_size):
     n_rows = comments_df.shape[0]
     batches_list = []
     for i in range(0, n_rows, batch_size):
-        batch = [comments_df.iloc[i : i + batch_size, :]]
+        batch = comments_df.iloc[i : i + batch_size, :]
         batches_list.append(batch)
 
     return batches_list
@@ -45,22 +45,39 @@ def batch_df(comments_df, batch_size):
 
 def main():
     data = pd.read_csv(INPUT_PATH)
+    data = data.iloc[0:10, :]
     print("++++++++++++++++++")
+    print("Data")
+    print(data)
+    print("Columns")
     print(data.columns)
     data["text"] = data["text"].map(utils.clean_comment)
-    data["text"] = data["text"].map(utils.remove_emojis)
-    comments_df = data["comment_id", "text"]
+    comments_df = data[["comment_id", "text"]]
     start = time.time()
 
     batches_list = batch_df(comments_df=comments_df, batch_size=4)
 
     # loop over the batches in batches_list
-    for batch in batches_list:
+    for i, batch in enumerate(batches_list):
 
-        comment_ids = batch["comment_id"]
-        comments_text = list(batch["text"])
-        out = classifier(comments_text, truncation=True, max_length=512)
+        print("++++++++++++++++")
+        print("batch")
+        print(batch)
+        print(type(batch))
+
+        comment_ids = batch["comment_id"].to_list()
+        comments_list = batch["text"].to_list()
+        print(comments_list)
+        out = classifier(comments_list, truncation=True, max_length=512)
+
+        print("++++++++++++++++++")
+        print("List Lengths:")
+        print(f"IDs: {len(comment_ids)}, Comments in: {len(comments_list)}")
+
+        print("++++++++++++++++++")
+        print("Out:")
         print(out)
+
         # streaming output to CSV
         # Extract labels and scores into separate lists. Need lists to make df
         label = [o["label"] for o in out]
@@ -69,11 +86,13 @@ def main():
         # define header and attach output
         data_batch = pd.DataFrame(
             {
-                "comment_id": comment_id,
+                "comment_id": comment_ids,
                 "toxicity_label": label,
                 "toxicity_score": score,
             }
         )
+        print("==========================")
+        print(data_batch)
 
         file_exists = True if os.path.exists(OUTPUT_PATH) else False
         if file_exists is False:
@@ -84,8 +103,8 @@ def main():
                 data_batch.to_csv(file, index=False, header=False)
 
         # logging
-        print(f"Comments labelled: {(index + 1 * 64)}")
-        estimate = utils.estimate_time_remaining(index, len(batches_list), start)
+        print(f"Comments labelled: {(i + 1 * 64)}")
+        estimate = utils.estimate_time_remaining(i, len(batches_list), start)
         print(f"Time remaining: ~{estimate} hours")
 
         # log time elapsed
