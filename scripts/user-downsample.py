@@ -9,8 +9,6 @@ INPUT_PATH = (
 OUTPUT_PATH = f"{PROJECT_PATH}data/comments/sample-subset/"
 
 import pandas as pd
-import random
-import utils
 
 comments = pd.read_csv(INPUT_PATH)
 # downsample by 50%
