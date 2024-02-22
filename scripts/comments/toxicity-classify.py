@@ -35,12 +35,12 @@ def batch_df(comments_df, batch_size):
     """Takes a DF and returns a list of DFs that are slices of the original,
     each with batch_size number of rows."""
     n_rows = comments_df.shape[0]
-    batches = []
+    batches_list = []
     for i in range(0, n_rows, batch_size):
         batch = [comments_df.iloc[i : i + batch_size, :]]
-        batches.append(batch)
+        batches_list.append(batch)
 
-    return batches
+    return batches_list
 
 
 def main():
