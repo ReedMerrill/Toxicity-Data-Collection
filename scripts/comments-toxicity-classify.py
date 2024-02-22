@@ -44,39 +44,22 @@ def batch_df(comments_df, batch_size):
 
 
 def main():
+    batch_size = 64
     data = pd.read_csv(INPUT_PATH)
-    data = data.iloc[0:10, :]
-    print("++++++++++++++++++")
-    print("Data")
-    print(data)
-    print("Columns")
-    print(data.columns)
+    data = data.dropna(subset=["text"])
     data["text"] = data["text"].map(utils.clean_comment)
     comments_df = data[["comment_id", "text"]]
     start = time.time()
 
-    batches_list = batch_df(comments_df=comments_df, batch_size=4)
+    batches_list = batch_df(comments_df=comments_df, batch_size=batch_size)
 
     # loop over the batches in batches_list
     for i, batch in enumerate(batches_list):
-
-        print("++++++++++++++++")
-        print("batch")
-        print(batch)
-        print(type(batch))
 
         comment_ids = batch["comment_id"].to_list()
         comments_list = batch["text"].to_list()
         print(comments_list)
         out = classifier(comments_list, truncation=True, max_length=512)
-
-        print("++++++++++++++++++")
-        print("List Lengths:")
-        print(f"IDs: {len(comment_ids)}, Comments in: {len(comments_list)}")
-
-        print("++++++++++++++++++")
-        print("Out:")
-        print(out)
 
         # streaming output to CSV
         # Extract labels and scores into separate lists. Need lists to make df
@@ -91,8 +74,6 @@ def main():
                 "toxicity_score": score,
             }
         )
-        print("==========================")
-        print(data_batch)
 
         file_exists = True if os.path.exists(OUTPUT_PATH) else False
         if file_exists is False:
@@ -103,11 +84,9 @@ def main():
                 data_batch.to_csv(file, index=False, header=False)
 
         # logging
-        print(f"Comments labelled: {(i + 1 * 64)}")
+        print(f"Comments labelled: {(i * batch_size)}")
         estimate = utils.estimate_time_remaining(i, len(batches_list), start)
         print(f"Time remaining: ~{estimate} hours")
-
-        # log time elapsed
         print(f"Time Elapsed: {time.time() - start}")
 
 
