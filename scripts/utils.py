@@ -3,6 +3,8 @@
 import time
 import re
 import emojis
+from langdetect import detect
+import pandas as pd
 
 
 def process_user_ids(id_list):
@@ -38,19 +40,49 @@ def estimate_time_remaining(task_index, total_tasks, start_time):
     return estimate
 
 
-def clean_comment(comment):
+def remove_urls(comment):
     """Coerce all data to string and remove URLs"""
 
-    string = str(comment)
-    clean_comment = re.sub(r"\S*https?:\S*", "", string)
+    pattern = r"https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*)"
+    word_list = str(comment).split()
+    clean_word_list = [re.sub(pattern, "", word) for word in word_list]
+    clean = " ".join(clean_word_list)
 
-    return clean_comment
+    print("===================")
+    print("Remove Emojis")
+    print("output type")
+    print(type(clean))
+    print(clean)
+
+    return clean
 
 
 def remove_emojis(comment):
     """Removes emojis from a list of strings."""
 
-    decoded = emojis.decode(comment)
-    clean = re.sub(r":\w+:", "", decoded)
+    string = str(comment)
+    decoded = emojis.decode(string)
+    word_list = decoded.split()
+    clean_word_list = [re.sub(r":\w+:", "", word) for word in word_list]
+    clean = " ".join(clean_word_list)
+
+    print("===================")
+    print("Remove Emojis")
+    print("output type")
+    print(type(clean))
+    print(clean)
 
     return clean
+
+
+def check_language(comment):
+    """Check that strings are English and return them if they are, or NA if
+    not."""
+
+    word_list = str(comment).split()
+    lang = detect(comment)
+
+    if lang == "en":
+        return comment
+    else:
+        return pd.NA
