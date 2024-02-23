@@ -69,6 +69,7 @@ def check_language(comment):
     not."""
 
     # Catch some basic problematic cases
+
     # remove punctuation
     translator = str.maketrans("", "", string.punctuation)
     _comment = comment.translate(translator)
@@ -82,13 +83,16 @@ def check_language(comment):
     if len(str(_comment).split()) == 1:
         return comment
 
+    # check the language
     langs_raw = detect_langs(_comment)
 
     langs = str(langs_raw[0]).split(":")[0]
     probs = str(langs_raw[0]).split(":")[1]
     langs_dict = {langs: float(probs)}
 
-    if "en" in langs_dict.keys() and langs_dict["en"] > 0.9:
+    highest_prob = max(langs_dict.values())
+
+    if "en" in langs_dict.keys() and langs_dict["en"] == highest_prob:
         return comment
     else:
         return pd.NA

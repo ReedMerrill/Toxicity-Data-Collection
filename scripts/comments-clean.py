@@ -7,8 +7,6 @@ OUTPUT_PATH = f"{PROJECT_PATH}data/comments/10pct-users-subset_comments_CLEAN.cs
 
 data = pd.read_csv(INPUT_PATH)
 
-data = pd.DataFrame({"text": ["!!! howdy, fucker"]})
-
 data["text"] = data["text"].map(utils.remove_emojis)
 data["text"] = data["text"].map(utils.remove_urls)
 data["text"] = data["text"].map(utils.check_language)
