@@ -2,8 +2,9 @@
 
 import time
 import re
+import string
 import emojis
-from langdetect import detect
+from langdetect import detect_langs
 import pandas as pd
 
 
@@ -48,12 +49,6 @@ def remove_urls(comment):
     clean_word_list = [re.sub(pattern, "", word) for word in word_list]
     clean = " ".join(clean_word_list)
 
-    print("===================")
-    print("Remove Emojis")
-    print("output type")
-    print(type(clean))
-    print(clean)
-
     return clean
 
 
@@ -66,12 +61,6 @@ def remove_emojis(comment):
     clean_word_list = [re.sub(r":\w+:", "", word) for word in word_list]
     clean = " ".join(clean_word_list)
 
-    print("===================")
-    print("Remove Emojis")
-    print("output type")
-    print(type(clean))
-    print(clean)
-
     return clean
 
 
@@ -79,10 +68,27 @@ def check_language(comment):
     """Check that strings are English and return them if they are, or NA if
     not."""
 
-    word_list = str(comment).split()
-    lang = detect(comment)
+    # Catch some basic problematic cases
+    # remove punctuation
+    translator = str.maketrans("", "", string.punctuation)
+    _comment = comment.translate(translator)
 
-    if lang == "en":
+    # if the comment is empty, return NA
+    if len(str(_comment).split()) == 0:
+        return pd.NA
+
+    # assume that single word comments are in English
+    # if its one word it can often be misclassified
+    if len(str(_comment).split()) == 1:
+        return comment
+
+    langs_raw = detect_langs(_comment)
+
+    langs = str(langs_raw[0]).split(":")[0]
+    probs = str(langs_raw[0]).split(":")[1]
+    langs_dict = {langs: float(probs)}
+
+    if "en" in langs_dict.keys() and langs_dict["en"] > 0.9:
         return comment
     else:
         return pd.NA
