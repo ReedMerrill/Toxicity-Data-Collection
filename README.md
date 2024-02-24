@@ -1,4 +1,4 @@
-# Toxicity on Reddit -- Data Collection
+# ❗️ Toxicity on Reddit -- Data Collection
 
 This code feeds into a broader project that will measure the over-time evolution of toxic behavior by politically engaged Reddit users. It carries out a snowball sampling of Reddit comments, collects the metadata of the commenters, and labels the comments as toxic or not.
 
