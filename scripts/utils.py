@@ -99,10 +99,6 @@ def check_language(comment):
         else:
             return pd.NA
 
-    except LangDetectException. as e:
-       print(e)
-       return pd.NA
-
     except Exception as e:
         print(e)
         return pd.NA
