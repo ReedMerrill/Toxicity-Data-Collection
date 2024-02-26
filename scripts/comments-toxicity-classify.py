@@ -15,7 +15,7 @@ from transformers import (
 import utils
 
 PROJECT_PATH = "/home/reed/Projects/learned-toxicity-reddit/reddit-api/"
-INPUT_PATH = f"{PROJECT_PATH}data/comments/11pct-users-subset_comments.csv"
+INPUT_PATH = f"{PROJECT_PATH}data/comments/11pct-users-subset_comments_CLEAN.csv"
 OUTPUT_PATH = f"{PROJECT_PATH}data/comments/toxicity-classified-comments.csv"
 
 model_name = "s-nlp/roberta_toxicity_classifier"
@@ -46,8 +46,7 @@ def batch_df(comments_df, batch_size):
 def main():
     batch_size = 64
     data = pd.read_csv(INPUT_PATH)
-    data = data.dropna(subset=["text"])
-    data["text"] = data["text"].map(utils.clean_comment)
+    data = data.dropna(subset=["text"], axis=0)
     comments_df = data[["comment_id", "text"]]
     start = time.time()
 
@@ -58,7 +57,6 @@ def main():
 
         comment_ids = batch["comment_id"].to_list()
         comments_list = batch["text"].to_list()
-        print(comments_list)
         out = classifier(comments_list, truncation=True, max_length=512)
 
         # streaming output to CSV
@@ -84,10 +82,10 @@ def main():
                 data_batch.to_csv(file, index=False, header=False)
 
         # logging
-        print(f"Comments labelled: {(i * batch_size)}")
+        print(f"Comments labelled: {(i * batch_size) + 64}")
         estimate = utils.estimate_time_remaining(i, len(batches_list), start)
-        print(f"Time remaining: ~{estimate} hours")
-        print(f"Time Elapsed: {time.time() - start}")
+        print(f"Time remaining: ~{round(estimate, 1)} hours")
+        print(f"Time Elapsed: {round((time.time() - start) / 3600, 1)} hours")
 
 
 if __name__ == "__main__":
