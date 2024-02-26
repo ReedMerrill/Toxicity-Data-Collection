@@ -83,6 +83,10 @@ def check_language(comment):
     if len(str(_comment).split()) == 1:
         return comment
 
+    # speed things up by only classifying based on the first 20 words
+    if len(str(_comment).split()) > 20:
+        _comment = " ".join(str(_comment).split()[:20])
+
     # check the language
     # if detect_langs throws an error, return NA
     try:
