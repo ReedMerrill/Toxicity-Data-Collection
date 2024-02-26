@@ -4,7 +4,7 @@ import time
 import re
 import string
 import emojis
-from langdetect import detect_langs
+from langdetect import detect_langs, LangDetectException
 import pandas as pd
 
 
@@ -84,15 +84,25 @@ def check_language(comment):
         return comment
 
     # check the language
-    langs_raw = detect_langs(_comment)
+    # if detect_langs throws an error, return NA
+    try:
+        langs_raw = detect_langs(_comment)
 
-    langs = str(langs_raw[0]).split(":")[0]
-    probs = str(langs_raw[0]).split(":")[1]
-    langs_dict = {langs: float(probs)}
+        langs = str(langs_raw[0]).split(":")[0]
+        probs = str(langs_raw[0]).split(":")[1]
+        langs_dict = {langs: float(probs)}
 
-    highest_prob = max(langs_dict.values())
+        highest_prob = max(langs_dict.values())
 
-    if "en" in langs_dict.keys() and langs_dict["en"] == highest_prob:
-        return comment
-    else:
+        if "en" in langs_dict.keys() and langs_dict["en"] == highest_prob:
+            return comment
+        else:
+            return pd.NA
+
+    except LangDetectException. as e:
+       print(e)
+       return pd.NA
+
+    except Exception as e:
+        print(e)
         return pd.NA
