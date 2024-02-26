@@ -16,5 +16,5 @@ comments_subset = comments.sample(n=round(comments.shape[0] * 0.55), random_stat
 
 # print(f"Original N: {comments.shape[0]}, Subset Length: {comments.shape[0]}")
 
-with open(f"{OUTPUT_PATH}10pct-users-subset_comments.csv", "w") as file:
+with open(f"{OUTPUT_PATH}11pct-users-subset_comments.csv", "w") as file:
     comments_subset.to_csv(file, index=False)

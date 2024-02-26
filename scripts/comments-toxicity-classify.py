@@ -15,7 +15,7 @@ from transformers import (
 import utils
 
 PROJECT_PATH = "/home/reed/Projects/learned-toxicity-reddit/reddit-api/"
-INPUT_PATH = f"{PROJECT_PATH}data/comments/10pct-users-subset_comments.csv"
+INPUT_PATH = f"{PROJECT_PATH}data/comments/11pct-users-subset_comments.csv"
 OUTPUT_PATH = f"{PROJECT_PATH}data/comments/toxicity-classified-comments.csv"
 
 model_name = "s-nlp/roberta_toxicity_classifier"
