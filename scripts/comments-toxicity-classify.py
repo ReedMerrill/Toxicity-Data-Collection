@@ -16,7 +16,7 @@ import utils
 
 PROJECT_PATH = "/home/reed/Projects/learned-toxicity-reddit/reddit-api/"
 INPUT_PATH = f"{PROJECT_PATH}data/comments/15pct-users-subset_comments_CLEAN.csv"
-OUTPUT_PATH = f"{PROJECT_PATH}data/comments/toxicity-classified-comments.csv"
+OUTPUT_PATH = f"{PROJECT_PATH}data/comments/classified-comments-snlp-toxicity.csv"
 
 model_name = "s-nlp/roberta_toxicity_classifier"
 
