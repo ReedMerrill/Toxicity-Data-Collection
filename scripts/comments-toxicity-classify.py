@@ -14,7 +14,7 @@ from transformers import (
 )
 import utils
 
-PROJECT_PATH = "/home/reed/Projects/learned-toxicity-reddit/reddit-api/"
+PROJECT_PATH = "/home/reed/Projects/learned-toxicity-reddit/toxicity-data-collection/"
 INPUT_PATH = f"{PROJECT_PATH}data/comments/15pct-users-subset_comments_CLEAN.csv"
 OUTPUT_PATH = f"{PROJECT_PATH}data/comments/classified-comments-snlp-toxicity.csv"
 
