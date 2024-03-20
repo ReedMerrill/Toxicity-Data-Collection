@@ -4,7 +4,6 @@ import time
 import re
 import string
 import emojis
-from langdetect import detect_langs, LangDetectException
 import pandas as pd
 
 
